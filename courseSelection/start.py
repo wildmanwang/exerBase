@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-通用工具
+程序入口
 """
 
 __author__ = 'Cliff Wang'
