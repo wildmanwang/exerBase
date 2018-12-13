@@ -20,28 +20,25 @@ class SchoolMember(object):
 
         bCancel = False
         if not bCancel:
-            self.name = input("Input your name(x to cancel):")
+            self.name = input("Input name(x to cancel):")
             if self.name.upper() == "X":
                 bCancel = True
         if not bCancel:
-            self.pwd = input("Input your password(x to cancel):")
+            self.pwd = input("Input password(x to cancel):")
             if self.pwd.upper() == "X":
                 bCancel = True
         if not bCancel:
-            self.sex = input("Input your sex(x to cancel):")
+            self.sex = input("Input sex(x to cancel):")
             if self.sex.upper() == "X":
                 bCancel = True
         if not bCancel:
-            self.birthDate = input("Input your birthDate(x to cancel):")
+            self.birthDate = input("Input birthDate(x to cancel):")
             if self.birthDate.upper() == "X":
                 bCancel = True
         self.schoolID = ""          #编码在子类中赋值。没有编码的对象创建不成功
         self.status = False
 
-        self.schID = ""
-
-    @classmethod
-    def regMember(cls):
+    def login(self):
         pass
 
     def printMenu(self, menuTitle, menuSuper):
@@ -54,7 +51,7 @@ class SchoolMember(object):
         level = len(menuSuper) + 1
         for key, item in self.menu.items():
             if len(key) == level and key[:level - 1] == menuSuper:
-                strPrt += "\t{num}\t{menu}\n".format(num=key, menu=item)
+                strPrt += "\t{num}\t{menu}\n".format(num=key[-1:], menu=item)
         print(strPrt)
 
     def dataDump(self, objType, name, obj):
@@ -69,10 +66,8 @@ class SchoolMember(object):
 
         return newObject
 
-    def exitSys(self):
+    def logout(self):
         pass
 
 if __name__ == "__main__":
     import time, datetime
-    sm = SchoolMember("张三", "男", 20)
-    sm.printMenu("", "")

@@ -19,9 +19,21 @@ from schoolMember import SchoolMember
 
 class Student(SchoolMember):
 
-    def __init__(self, name, sex, age, *hobby):
-        super().__init__(name, sex, age)
-        self.hobbies = hobby
+    def __init__(self, school):
+        super().__init__(school)
+        self.menu = {
+            "1":"选择学校",
+            "11":"注册",
+            "12":"登录",
+            "121":"查看课程",
+            "122":"查看我的班级",
+            "123":"查看我的详情",
+            "13":"修改密码",
+            "10":"退出登录",
+            "0":"退出"
+        }
+        self.schoolID = ""
+        self.status = True
 
     def signUp(self, grade):
         pass

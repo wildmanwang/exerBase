@@ -6,3 +6,8 @@
 """
 
 __author__ = 'Cliff Wang'
+
+from school import School
+
+if __name__ == "__main__":
+    pass
