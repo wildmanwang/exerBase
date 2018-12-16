@@ -51,4 +51,4 @@ if __name__ == "__main__":
                     curLevel = curLevel[:len(curLevel) - 1]
                     sChoose = "N"
                 else:
-                    pass
+                    print(mem.menu[curLevel + sChoose].split("-")[0], mem.menu[curLevel + sChoose].split("-")[1])

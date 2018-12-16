@@ -42,7 +42,7 @@ class SchoolMember(object):
         level = len(menuSuper) + 1
         for key, item in self.menu.items():
             if len(key) == level and key[:level - 1] == menuSuper:
-                strPrt += "\t{num}\t{menu}\n".format(num=key[-1:], menu=item)
+                strPrt += "\t{num}\t{menu}\n".format(num=key[-1:], menu=item.split("-")[0])
         print(strPrt)
 
 if __name__ == "__main__":
