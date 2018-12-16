@@ -33,9 +33,9 @@ class School(object):
         self.grades = []            #班级列表，编码格式：G###
         self.teachers = []          #老师列表，编码格式：2###
         self.students = []          #学生列表，编码格式：3###
-        bLogin = False              #是否已登录 True：已登录 False：未登录
-        iLoginType = 0              #登录类型 0：未登录 1：管理员 2：老师 3：学生
-        sloginID = ""               #登录账号
+        self.bLogin = False              #是否已登录 True：已登录 False：未登录
+        self.iLoginType = 0              #登录类型 0：未登录 1：管理员 2：老师 3：学生
+        self.sloginID = ""               #登录账号
 
     @classmethod
     def dataDump(cls, obj):
@@ -52,6 +52,7 @@ class School(object):
         return newObject
 
     def login(self):
+        print("Login info".center(30, "-"))
         schoolID = input("Input your schoolID:")
         password = input("Input your password:")
         if schoolID[:1] == "1":
@@ -62,9 +63,36 @@ class School(object):
             members = self.students
         else:
             raise Exception("Invalid school ID.")
+        bSuccess = False
+        for item in members:
+            if item.schoolID == schoolID and item.pwd == password:
+                bSuccess = True
+                break
+        if bSuccess:
+            self.bLogin = True
+            self.iLoginType = int(schoolID[:1])
+            self.sloginID = schoolID
+            if self.iLoginType == 1:
+                print("Welcome to courses selection system for Managers")
+            elif self.iLoginType == 2:
+                print("Welcome to courses selection system for Teachers")
+            elif self.iLoginType == 3:
+                print("Welcome to courses selection system for Students")
+            else:
+                raise Exception("Login type invalid.")
+        else:
+            raise Exception("School ID eror or password error.")
+        return item
 
     def logout(self):
-        pass
+        sInput = input("Are you sure exit?yes/no")
+        if sInput.upper() == "YES":
+            print("{name} logged out.".format(name=self.sloginID.capitalize()))
+            self.bLogin = False
+            self.iLoginType = 0
+            self.sloginID = ""
+        else:
+            print("Log out is cancel.")
 
     def showManagers(self):
         pass

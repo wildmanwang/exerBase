@@ -9,21 +9,19 @@ from schoolMember import SchoolMember
 class Teacher(SchoolMember):
 
     menu = {
-        "1": "登录学校",
-        "11": "选择我的班级",
-        "111": "查看学生列表",
-        "112": "录入学生成绩",
-        "113": "查看学生详情",
-        "114": "退出班级管理",
-        "115": "查看我的资料",
-        "116": "辞职",
-        "117": "修改密码",
-        "110": "退出班级",
-        "10": "退出登录",
-        "0": "退出"
+        "1": "选择我的班级-",
+        "11": "查看学生列表-printList",
+        "12": "录入学生成绩-modify",
+        "13": "查看学生详情-printStudent",
+        "10": "退出班级管理-",
+        "2": "辞职-",
+        "3": "查看我的资料-printSelf",
+        "4": "修改密码-password",
+        "0": "退出登录-",
     }
 
     def __init__(self, school):
+        self.title = "teacher"
         super().__init__(school)
         bCancel = False
         if not bCancel:
@@ -31,7 +29,12 @@ class Teacher(SchoolMember):
             if self.name.upper() == "X":
                 bCancel = True
         self.grades = []
-        self.schoolID = ""
+        num = 0
+        for item in self.school.teachers:
+            if int(item.schoolID[-3:]) > num:
+                num = int(item.schoolID[-3:])
+        num += 1
+        self.schoolID = "2" + ("00" + str(num))[-3:]
         self.status = True
 
     def showAll(self, grade):
@@ -41,5 +44,4 @@ class Teacher(SchoolMember):
         pass
 
 if __name__ == "__main__":
-    t1 = Teacher("Jack", '1', 28, 20000.00)
-    print(t1.name, t1.salary)
+    print("123456-abc".split("-")[1])

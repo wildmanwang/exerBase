@@ -20,18 +20,23 @@ from schoolMember import SchoolMember
 class Student(SchoolMember):
 
     menu = {
-        "1": "选择学校",
-        "11": "注册",
-        "12": "登录",
-        "121": "查看课程",
-        "122": "查看我的班级",
-        "123": "查看我的详情",
-        "13": "修改密码",
-        "10": "退出登录",
-        "0": "退出"
+        "1": "注册-reg",
+        "2": "报名-signUp",
+        "3": "查看课程-printSubjects",
+        "4": "查看我的班级-printGrades",
+        "5": "查看我的成绩-printCard",
+        "6": "查看我的资料-printSelf",
+        "7": "修改密码-password",
+        "0": "退出登录-",
     }
 
     def __init__(self, school):
+        self.title = "student"
         super().__init__(school)
-        self.schoolID = ""
+        num = 0
+        for item in self.school.students:
+            if int(item.schoolID[-3:]) > num:
+                num = int(item.schoolID[-3:])
+        num += 1
+        self.schoolID = "3" + ("00" + str(num))[-3:]
         self.status = True

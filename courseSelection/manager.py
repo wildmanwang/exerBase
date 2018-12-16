@@ -13,46 +13,47 @@ from school import School
 class Manager(SchoolMember):
 
     menu = {
-        "1": "登录学校",
-        "11": "管理员管理",
-        "111": "查看管理员列表",
-        "112": "新增管理员",
-        "113": "修改管理员",
-        "114": "删除管理员",
-        "110": "退出管理员管理",
-        "12": "课程管理",
-        "121": "查看课程列表",
-        "122": "新增课程",
-        "123": "修改课程",
-        "124": "删除课程",
-        "120": "退出课程管理",
-        "13": "班级管理",
-        "131": "查看班级列表",
-        "132": "新增班级",
-        "133": "修改班级",
-        "134": "删除班级",
-        "130": "退出班级管理",
-        "14": "老师管理",
-        "141": "查看老师列表",
-        "142": "招聘老师",
-        "143": "修改管理员",
-        "144": "删除老师",
-        "140": "退出老师管理",
-        "15": "学生管理",
-        "151": "查看学生列表",
-        "154": "开出学生",
-        "150": "退出学生管理",
-        "16": "修改密码",
-        "10": "退出登录",
-        "0": "退出"
+        "1": "管理员管理-",
+        "11": "查看管理员列表-printList",
+        "12": "新增管理员-add",
+        "13": "修改管理员-modify",
+        "14": "删除管理员-delete",
+        "10": "退出管理员管理-",
+        "2": "课程管理-",
+        "21": "查看课程列表-printList",
+        "22": "新增课程-add",
+        "23": "修改课程-modify",
+        "24": "删除课程-delete",
+        "20": "退出课程管理-",
+        "3": "班级管理-",
+        "31": "查看班级列表-printList",
+        "32": "新增班级-add",
+        "33": "修改班级-modify",
+        "34": "删除班级-delete",
+        "30": "退出班级管理-",
+        "4": "老师管理-",
+        "41": "查看老师列表-printList",
+        "42": "招聘老师-add",
+        "43": "修改管理员-modify",
+        "44": "删除老师-delete",
+        "40": "退出老师管理-",
+        "5": "学生管理-",
+        "51": "查看学生列表-printList",
+        "54": "开除学生-delete",
+        "50": "退出学生管理-",
+        "6": "查看我的资料-printSelf",
+        "7": "修改密码-password",
+        "0": "退出登录-",
     }
 
-    def __init__(self, school, title):
-        super().__init__(school, title)
+    def __init__(self, school):
+        self.title = "manager"
+        super().__init__(school)
         num = 0
         for item in school.managers:
             if int(item.schoolID[-3:]) > num:
                 num = int(item.schoolID[-3:])
+        num += 1
         self.schoolID = "1" + ("00" + str(num))[-3:]
         self.status = True
         school.managers.append(self)
@@ -64,7 +65,7 @@ class Manager(SchoolMember):
         except Exception as e:
             print(str(e))
         else:
-            person = Manager(school, "Manager")
+            person = Manager(school)
             school.managers.append(person)
             School.dataDump(school)
 

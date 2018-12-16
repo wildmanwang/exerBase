@@ -15,36 +15,30 @@ class SchoolMember(object):
         "0": "退出"
     }
 
-    def __init__(self, school, title):
+    def __init__(self, school):
         self.school = school
-        self.title = title
         bCancel = False
         if not bCancel:
-            self.name = input("Input {title}'s name(x to cancel):".format(title=title))
+            self.name = input("Input {title}'s name(x to cancel):".format(title=self.title))
             if self.name.upper() == "X":
                 bCancel = True
         if not bCancel:
-            self.pwd = input("Input {title}'s password(x to cancel):".format(title=title))
+            self.pwd = input("Input {title}'s password(x to cancel):".format(title=self.title))
             if self.pwd.upper() == "X":
                 bCancel = True
         if not bCancel:
-            self.sex = input("Input {title}'s sex(x to cancel):".format(title=title))
+            self.sex = input("Input {title}'s sex(x to cancel):".format(title=self.title))
             if self.sex.upper() == "X":
                 bCancel = True
         if not bCancel:
-            self.birthDate = input("Input {title}'s birthDate(x to cancel):".format(title=title))
+            self.birthDate = input("Input {title}'s birthDate(x to cancel):".format(title=self.title))
             if self.birthDate.upper() == "X":
                 bCancel = True
         self.schoolID = ""          #编码在子类中赋值。没有编码的对象创建不成功
         self.status = False
 
-    def printMenu(self, menuTitle, menuSuper):
-        if not menuTitle:
-            strPrt = "Choose a option:\n"
-        elif menuTitle[-1:] == ":" or menuTitle[-1:] == "：":
-            strPrt = menuTitle + "\n"
-        else:
-            strPrt = menuTitle + ":\n"
+    def printMenu(self, menuSuper):
+        strPrt = "Choose a option:\n"
         level = len(menuSuper) + 1
         for key, item in self.menu.items():
             if len(key) == level and key[:level - 1] == menuSuper:

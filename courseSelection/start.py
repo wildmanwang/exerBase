@@ -29,6 +29,26 @@ if __name__ == "__main__":
             sInput = input(ls_menu)
         name = schs[int(sInput) - 1][:-4]
         school = School.dataLoad(name)
-        school.login()
-        if school.iLoginType == 1:
-            pass
+        try:
+            mem = school.login()
+        except Exception as e:
+            print(str(e))
+        else:
+            curLevel = ""
+            sChoose = "N"
+            while curLevel + sChoose != "0":
+                mem.printMenu(curLevel)
+                sChoose = input("Input your choice:")
+                bSuperMenu = False
+                for key in mem.menu.keys():
+                    iLen = len(curLevel + sChoose)
+                    if key[:iLen] == curLevel + sChoose and len(key) > iLen:
+                        bSuperMenu = True
+                        break
+                if bSuperMenu:
+                    curLevel = curLevel + sChoose
+                elif sChoose == "0" and len(curLevel) > 0:
+                    curLevel = curLevel[:len(curLevel) - 1]
+                    sChoose = "N"
+                else:
+                    pass
