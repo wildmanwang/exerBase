@@ -7,7 +7,7 @@
 
 __author__ = 'Cliff Wang'
 
-from school import School
+#from school import School
 from schoolMember import SchoolMember
 
 class Manager(SchoolMember):

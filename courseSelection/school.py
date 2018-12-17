@@ -112,7 +112,7 @@ class School(object):
                 bFind = True
         if not bFind:
             raise Exception("{title}'s ID is invalid.".format(title=title.capitalize()))
-        if sInput == mem.schoolID:
+        if sInput == self.sloginID:
             raise Exception("You can't delete yourself.")
         sInput = input("Are you sure to delete {title} {name}({ID})?yes/no".format(title=title, name=mem.name, ID=mem.schoolID))
         if sInput.upper() != "YES":

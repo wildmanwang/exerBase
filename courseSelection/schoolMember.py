@@ -8,7 +8,7 @@
 """
 __author__ = "Cliff.wang"
 
-from school import School
+#from school import School
 
 class SchoolMember(object):
 
