@@ -8,6 +8,10 @@ __author__ = "Cliff.wang"
 import pickle
 import os
 
+from manager import Manager
+from teacher import Teacher
+from student import Student
+
 class School(object):
 
     def __init__(self):
@@ -36,6 +40,86 @@ class School(object):
         self.bLogin = False              #是否已登录 True：已登录 False：未登录
         self.iLoginType = 0              #登录类型 0：未登录 1：管理员 2：老师 3：学生
         self.sloginID = ""               #登录账号
+
+    def printList(self, title):
+        if title == "manager":
+            mems = self.managers
+        elif title == "teacher":
+            mems = self.teachers
+        else:
+            mems = self.students
+        sOutput = "{school}'s {title} list:\n".format(school=self.name, title=title)
+        for item in mems:
+            sOutput += "ID:{id}\tName:{name}\tSex:{sex}\tBirthdate:{birthDate}\n".format(
+                id=item.schoolID,
+                name=item.name,
+                sex=item.sex,
+                birthDate=item.birthDate
+            )
+        print(sOutput)
+
+    def add(self, title):
+        if title == "manager":
+            mem = Manager(self)
+        elif title == "teacher":
+            mem = Teacher(self)
+        elif title == "student":
+            mem = Student(self)
+        else:
+            raise Exception("Invalid object type.")
+        School.dataDump(self)
+        print("{title} {name} is added success.".format(title=title.capitalize(), name=mem.name))
+
+    def modify(self, title):
+        if title == "manager":
+            mems = self.managers
+        elif title == "teacher":
+            mems = self.teachers
+        else:
+            mems = self.students
+        bFind = False
+        sInput = input("Input the ID of {title} you wanto modify:".format(title=title))
+        for item in mems:
+            if item.schoolID == sInput:
+                mem = item
+                bFind = True
+        if not bFind:
+            raise Exception("{title}'s ID is invalid.".format(title=title.capitalize()))
+        mem.name = input("Input {title}'s name(x to cancel):".format(title=title))
+        if mem.name.upper() == "X":
+            raise Exception("User cancelled operation.")
+        mem.sex = input("Input {title}'s sex(x to cancel):".format(title=title))
+        if mem.sex.upper() == "X":
+            raise Exception("User cancelled operation.")
+        mem.birthDate = input("Input {title}'s birthDate(x to cancel):".format(title=title))
+        if mem.birthDate.upper() == "X":
+            raise Exception("User cancelled operation.")
+        School.dataDump(self)
+        print("{title} {name} is saved success.".format(title=title.capitalize(), name=mem.name))
+
+    def delete(self, title):
+        if title == "manager":
+            mems = self.managers
+        elif title == "teacher":
+            mems = self.teachers
+        else:
+            mems = self.students
+        bFind = False
+        sInput = input("Input the {title}'s ID you wanto delete:".format(title=title))
+        for item in mems:
+            if item.schoolID == sInput:
+                mem = item
+                bFind = True
+        if not bFind:
+            raise Exception("{title}'s ID is invalid.".format(title=title.capitalize()))
+        if sInput == mem.schoolID:
+            raise Exception("You can't delete yourself.")
+        sInput = input("Are you sure to delete {title} {name}({ID})?yes/no".format(title=title, name=mem.name, ID=mem.schoolID))
+        if sInput.upper() != "YES":
+            raise Exception("User cancelled operation.")
+        mems.remove(mem)
+        School.dataDump(self)
+        print("{title} {name} is deleted success.".format(title=title.capitalize(), name=mem.name))
 
     @classmethod
     def dataDump(cls, obj):
@@ -93,21 +177,6 @@ class School(object):
             self.sloginID = ""
         else:
             print("Log out is cancel.")
-
-    def showManagers(self):
-        pass
-
-    def showSubjects(self):
-        pass
-
-    def showGrades(self):
-        pass
-
-    def showTeachers(self):
-        pass
-
-    def showStudents(self):
-        pass
 
 if __name__ == "__main__":
     pass

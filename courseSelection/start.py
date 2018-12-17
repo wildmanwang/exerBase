@@ -36,6 +36,8 @@ if __name__ == "__main__":
         else:
             curLevel = ""
             sChoose = "N"
+            sFunCur = ""
+            sFunSpr = ""
             while curLevel + sChoose != "0":
                 mem.printMenu(curLevel)
                 sChoose = input("Input your choice:")
@@ -47,8 +49,24 @@ if __name__ == "__main__":
                         break
                 if bSuperMenu:
                     curLevel = curLevel + sChoose
-                elif sChoose == "0" and len(curLevel) > 0:
-                    curLevel = curLevel[:len(curLevel) - 1]
-                    sChoose = "N"
+                    sFunSpr = sFunCur
+                    sFunCur = mem.menu[curLevel + sChoose].split("-")[1]
+                elif sChoose == "0":
+                    if len(curLevel) > 0:
+                        curLevel = curLevel[:len(curLevel) - 1]
+                        sChoose = "N"
+                    else:
+                        school.logout()
+                        if school.bLogin:
+                            sChoose = "N"
+                    sFunSpr = ""
+                    sFunCur = mem.menu[curLevel].split("-")[1]
                 else:
-                    print(mem.menu[curLevel + sChoose].split("-")[0], mem.menu[curLevel + sChoose].split("-")[1])
+                    try:
+                        sFun = mem.menu[curLevel + sChoose].split("-")[1]
+                        if sFun in ["printList", "add", "modify", "delete"]:
+                            getattr(mem.school, sFun)(sFunSpr)
+                        else:
+                            getattr(mem, sFun)()
+                    except Exception as e:
+                        print(str(e))

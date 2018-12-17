@@ -4,6 +4,7 @@
 """
 __author__ = "Cliff.wang"
 
+from school import School
 from schoolMember import SchoolMember
 
 class Teacher(SchoolMember):
@@ -23,11 +24,9 @@ class Teacher(SchoolMember):
     def __init__(self, school):
         self.title = "teacher"
         super().__init__(school)
-        bCancel = False
-        if not bCancel:
-            self.salary = input("Input salary(x to cancel):")
-            if self.name.upper() == "X":
-                bCancel = True
+        self.salary = input("Input salary(x to cancel):")
+        if self.salary.upper() == "X":
+            raise Exception("User cancelled operation.")
         self.grades = []
         num = 0
         for item in self.school.teachers:
@@ -36,12 +35,16 @@ class Teacher(SchoolMember):
         num += 1
         self.schoolID = "2" + ("00" + str(num))[-3:]
         self.status = True
+        self.mems = self.school.teachers
+        self.school.teachers.append(self)
 
-    def showAll(self, grade):
-        pass
-
-    def inputScore(self, grade, student, chapter, score):
-        pass
+    def add(self):
+        mem = Teacher(self.school)
+        School.dataDump(self.school)
+        print("{title} {name} is added success.".format(title=self.title.capitalize(), name=mem.name))
 
 if __name__ == "__main__":
-    print("123456-abc".split("-")[1])
+    l1 = ['a', 'b', 'c']
+    l2 = ['d', 'e']
+    l3 = l1 + l2
+    print(l3)
