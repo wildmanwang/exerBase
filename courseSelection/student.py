@@ -15,7 +15,6 @@
 """
 __author__ = "Cliff.wang"
 
-#from school import School
 from schoolMember import SchoolMember
 
 class Student(SchoolMember):
@@ -34,20 +33,18 @@ class Student(SchoolMember):
     def __init__(self, school):
         self.title = "student"
         super().__init__(school)
+        num = 0
+        for item in self.school.students:
+            if int(item.sID[-3:]) > num:
+                num = int(item.sID[-3:])
+        num += 1
+        self.sID = "3" + ("00" + str(num))[-3:]
+        self.fields.append("enrollDate")
         self.enrollDate = input("Input enroll date(x to cancel):")
         if self.enrollDate.upper() == "X":
             raise Exception("User cancelled operation.")
-        num = 0
-        for item in self.school.students:
-            if int(item.schoolID[-3:]) > num:
-                num = int(item.schoolID[-3:])
-        num += 1
-        self.schoolID = "3" + ("00" + str(num))[-3:]
         self.status = True
-        self.mems = self.school.students
         self.school.students.append(self)
 
-    def add(self):
-        mem = Student(self.school)
-        School.dataDump(self.school)
-        print("{title} {name} is added success.".format(title=self.title.capitalize(), name=mem.name))
+if __name__ == "__main__":
+    print("".center(40, "="))

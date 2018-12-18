@@ -7,7 +7,6 @@
 
 __author__ = 'Cliff Wang'
 
-#from school import School
 from schoolMember import SchoolMember
 
 class Manager(SchoolMember):
@@ -25,18 +24,21 @@ class Manager(SchoolMember):
         "23": "修改课程-modify",
         "24": "删除课程-delete",
         "20": "退出课程管理-",
-        "3": "班级管理-grade",
-        "31": "查看班级列表-printList",
-        "32": "新增班级-add",
-        "33": "修改班级-modify",
-        "34": "删除班级-delete",
-        "30": "退出班级管理-",
-        "4": "老师管理-teacher",
-        "41": "查看老师列表-printList",
-        "42": "招聘老师-add",
-        "43": "修改管理员-modify",
-        "44": "删除老师-delete",
-        "40": "退出老师管理-",
+        "3": "老师管理-teacher",
+        "31": "查看老师列表-printList",
+        "32": "招聘老师-add",
+        "33": "修改管理员-modify",
+        "34": "删除老师-delete",
+        "30": "退出老师管理-",
+        "4": "班级管理-grade",
+        "41": "查看班级列表-printList",
+        "42": "新增班级-add",
+        "43": "修改班级-modify",
+        "44": "删除班级-delete",
+        "45": "指定课程-configSubject",
+        "46": "指定老师-configTeacher",
+        "47": "开课-start",
+        "40": "退出班级管理-",
         "5": "学生管理-student",
         "51": "查看学生列表-printList",
         "54": "开除学生-delete",
@@ -51,28 +53,12 @@ class Manager(SchoolMember):
         super().__init__(school)
         num = 0
         for item in self.school.managers:
-            if int(item.schoolID[-3:]) > num:
-                num = int(item.schoolID[-3:])
+            if int(item.sID[-3:]) > num:
+                num = int(item.sID[-3:])
         num += 1
-        self.schoolID = "1" + ("00" + str(num))[-3:]
+        self.sID = "1" + ("00" + str(num))[-3:]
         self.status = True
-        self.mems = self.school.managers
         self.school.managers.append(self)
 
-    def add(self):
-        mem = Manager(self.school)
-        School.dataDump(self.school)
-        print("{title} {name} is added success.".format(title=self.title.capitalize(), name=mem.name))
-
-    @classmethod
-    def schoolAdd(cls):
-        try:
-            school = School()
-        except Exception as e:
-            print(str(e))
-        else:
-            Manager(school)
-            School.dataDump(school)
-
 if __name__ == "__main__":
-    Manager.schoolAdd()
+    pass

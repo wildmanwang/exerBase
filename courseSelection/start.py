@@ -9,9 +9,6 @@ __author__ = 'Cliff Wang'
 
 import os
 from school import School
-from manager import Manager
-from teacher import Teacher
-from student import Student
 
 if __name__ == "__main__":
     schs = os.listdir(".\\data\\")
@@ -66,5 +63,7 @@ if __name__ == "__main__":
                             getattr(mem.school, sFun)(sSuper)
                         else:
                             getattr(mem, sFun)()
+                        if school.bModified:
+                            School.dataDump(school)
                     except Exception as e:
                         print(str(e))

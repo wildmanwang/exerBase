@@ -8,8 +8,6 @@
 """
 __author__ = "Cliff.wang"
 
-#from school import School
-
 class SchoolMember(object):
 
     menu = {
@@ -19,19 +17,25 @@ class SchoolMember(object):
 
     def __init__(self, school):
         self.school = school
+        self.fields = []
+        self.fields.append("sID")
+        self.sID = ""                  # 编码在子类中赋值
+        self.fields.append("name")
         self.name = input("Input {title}'s name(x to cancel):".format(title=self.title))
         if self.name.upper() == "X":
             raise Exception("User cancelled operation.")
+        self.fields.append("pwd")
         self.pwd = input("Input {title}'s password(x to cancel):".format(title=self.title))
         if self.pwd.upper() == "X":
             raise Exception("User cancelled operation.")
+        self.fields.append("sex")
         self.sex = input("Input {title}'s sex(x to cancel):".format(title=self.title))
         if self.sex.upper() == "X":
             raise Exception("User cancelled operation.")
+        self.fields.append("birthDate")
         self.birthDate = input("Input {title}'s birthDate(x to cancel):".format(title=self.title))
         if self.birthDate.upper() == "X":
             raise Exception("User cancelled operation.")
-        self.schoolID = ""          #编码在子类中赋值。没有编码的对象创建不成功
         self.status = False
 
     def printMenu(self, menuSuper):
@@ -44,10 +48,10 @@ class SchoolMember(object):
 
     def printSelf(self):
         sOutput = "{title} {name}'s info".format(title=self.title.capitalize(), name=self.name).center(40, "=") + "\n"
-        sOutput += "ID:".rjust(15, " ") + " " * 5 + self.schoolID.ljust(20, " ") + "\n"
-        sOutput += "Name:".rjust(15, " ") + " " * 5 + self.name.ljust(20, " ") + "\n"
-        sOutput += "Sex:".rjust(15, " ") + " " * 5 + self.sex.ljust(20, " ") + "\n"
-        sOutput += "Birthdate:".rjust(15, " ") + " " * 5 + self.birthDate.ljust(20, " ") + "\n"
+        for col in self.fields:
+            if col.upper() == "PWD" or col.upper() == "PASSWORD":
+                continue
+            sOutput += "{col}{space}:{value}\n".format(col=col.capitalize().rjust(15, " "), space=" " * 5, value=getattr(self, col).ljust(20, " "))
         sOutput += "end info".center(40, "=")
         print(sOutput)
 
@@ -60,18 +64,18 @@ class SchoolMember(object):
         if sPwNew != sPwAgain:
             raise Exception("Two inputs are different.")
         self.pwd = sPwNew
-        if self.schoolID[:1] == "1":
+        if self.sID[:1] == "1":
             mems = self.school.managers
-        elif self.schoolID[:1] == "2":
+        elif self.sID[:1] == "2":
             mems = self.school.teachers
         else:
             mems = self.school.students
         for item in mems:
-            if item.schoolID == self.schoolID:
+            if item.sID == self.sID:
                 item.pwd = sPwNew
-                School.dataDump(self.school)
+                self.school.bModified = True
                 print("Your password is modified.")
                 break
 
 if __name__ == "__main__":
-    import time, datetime
+    pass
