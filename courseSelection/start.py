@@ -61,8 +61,10 @@ if __name__ == "__main__":
                                     sSuper = mem.menu[curLevel].split("-")[1]
                                     break
                             getattr(mem.school, sFun)(sSuper)
-                        else:
+                        elif sFun in ["printSelf", "password"]:
                             getattr(mem, sFun)()
+                        else:
+                            getattr(mem.school, sFun)()
                         if school.bModified:
                             School.dataDump(school)
                     except Exception as e:

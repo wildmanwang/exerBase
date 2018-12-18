@@ -142,6 +142,23 @@ class School(object):
         self.bModified = True
         print("{title} {name} is deleted success.".format(title=title.capitalize(), name=mem.name))
 
+    def setSubject(self):
+        # 选择班级
+        # 选择课程
+        # 设置课程
+        pass
+
+    def setTeacher(self):
+        # 选择班级
+        # 选择老师
+        # 设置老师
+        pass
+
+    def start(self):
+        # 询问启动
+        # 启动
+        pass
+
     @classmethod
     def dataDump(cls, obj):
         f = open("data\\{name}.dat".format(name=obj.name), "wb")
