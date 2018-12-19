@@ -60,7 +60,7 @@ class School(object):
         sOutput = "{school}'s {title} list:\n".format(school=self.name, title=title) + "\n".rjust(40, "=")
         for item in mems:
             for col in item.fields:
-                if col.upper() == "PWD" or col.upper() == "PASSWORD":
+                if col.upper() in ("PASSWORD"):
                     continue
                 sOutput += "{title}:{value}\t".format(title=col.capitalize(), value=getattr(item, col))
             sOutput += "\n"
@@ -105,6 +105,8 @@ class School(object):
         if not bFind:
             raise Exception("{title}'s ID is invalid.".format(title=title.capitalize()))
         for col in mem.fields:
+            if col.upper() in ("SID", "PASSWORD", "SUBJECT", "TEACHER", "STATUS"):
+                continue
             sTmp = input("Input {title}'s {col}(x to cancel):".format(title=title, col=col))
             if sTmp.upper() == "X":
                 raise Exception("User cancelled operation.")
@@ -144,20 +146,108 @@ class School(object):
 
     def setSubject(self):
         # 选择班级
+        if len(self.grades) == 0:
+            raise Exception("Please create grades first.")
+        sOutPut = "Select a grade:\n"
+        for item in self.grades:
+            sOutPut += "{code}\t{name}.\n".format(code=item.sID, name=item.name)
+        sInput = input(sOutPut)
+        bFind = False
+        for item in self.grades:
+            if item.sID == sInput:
+                grade = item
+                bFind = True
+                break
+        if not bFind:
+            raise Exception("Input invalid.")
         # 选择课程
+        if len(self.subjects) == 0:
+            raise Exception("Please create subjects first.")
+        sOutPut = "Select a subject:\n"
+        for item in self.subjects:
+            sOutPut += "{code}\t{name}.\n".format(code=item.sID, name=item.name)
+        sInput = input(sOutPut)
+        bFind = False
+        for item in self.subjects:
+            if item.sID == sInput:
+                subject = "[{code}]{name}".format(code=item.sID, name=item.name)
+                bFind = True
+                break
+        if not bFind:
+            raise Exception("Input invalid.")
         # 设置课程
-        pass
+        grade.subject = subject
+        # 保存
+        self.bModified = True
+        print("Grade[{grade}] is setted subject[{subject}] success.".format(grade=grade.name, subject=item.name))
 
     def setTeacher(self):
         # 选择班级
+        if len(self.grades) == 0:
+            raise Exception("Please create grade first.")
+        sOutPut = "Select a grade:\n"
+        for item in self.grades:
+            sOutPut += "{code}\t{name}.\n".format(code=item.sID, name=item.name)
+        sInput = input(sOutPut)
+        bFind = False
+        for item in self.grades:
+            if item.sID == sInput:
+                grade = item
+                bFind = True
+                break
+        if not bFind:
+            raise Exception("Input invalid.")
         # 选择老师
-        # 设置老师
-        pass
+        if len(self.teachers) == 0:
+            raise Exception("Please hire teachers first.")
+        sOutPut = "Select a teacher:\n"
+        for item in self.teachers:
+            sOutPut += "{code}\t{name}.\n".format(code=item.sID, name=item.name)
+        sInput = input(sOutPut)
+        bFind = False
+        for item in self.teachers:
+            if item.sID == sInput:
+                teacher = "[{code}]{name}".format(code=item.sID, name=item.name)
+                bFind = True
+                break
+        if not bFind:
+            raise Exception("Input invalid.")
+        # 设置课程
+        grade.teacher = teacher
+        # 保存
+        self.bModified = True
+        print("Grade[{grade}] is setted teacher[{teacher}] success.".format(grade=grade.name, teacher=item.name))
 
     def start(self):
+        # 选择班级
+        if len(self.grades) == 0:
+            raise Exception("Please create grade first.")
+        sOutPut = "Select a grade:\n"
+        for item in self.grades:
+            sOutPut += "{code}\t{name}.\n".format(code=item.sID, name=item.name)
+        sInput = input(sOutPut)
+        bFind = False
+        for item in self.grades:
+            if item.sID == sInput:
+                grade = item
+                bFind = True
+                break
+        if not bFind:
+            raise Exception("Input invalid.")
+        # 判断是否指定了课程及老师
+        if grade.subject == "<Not yet set up>":
+            raise Exception("Please set up subject first.")
+        if grade.teacher == "<Not yet set up>":
+            raise Exception("Please set up teacher first.")
         # 询问启动
+        sInput = input("Are you sure you want to enable this grade[{name}]?yes/no".format(name=grade.name))
+        if sInput.upper() != "YES":
+            raise Exception("User cancelled operation.")
         # 启动
-        pass
+        grade.status = True
+        # 保存
+        self.bModified = True
+        print("Grade[{grade}] is enabled success.".format(grade=grade.name))
 
     @classmethod
     def dataDump(cls, obj):

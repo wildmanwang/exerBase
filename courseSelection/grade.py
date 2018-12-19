@@ -27,5 +27,10 @@ class Grade(object):
         self.startDate = input("Input startDate(x to cancel):") #开班日期
         if self.startDate.upper() == "X":
             raise Exception("User cancelled operation.")
+        self.fields.append("subject")
+        self.subject = "<Not yet set up>"
+        self.fields.append("teacher")
+        self.teacher = "<Not yet set up>"
+        self.fields.append("status")
         self.status = False
         self.school.grades.append(self)
