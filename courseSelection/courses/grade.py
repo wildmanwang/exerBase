@@ -7,11 +7,14 @@
 """
 __author__ = "Cliff.wang"
 
-class Grade(object):
+from courses.schoolObject import SchoolObject
+
+class Grade(SchoolObject):
 
     def __init__(self, school):
-        self.school = school            #学校
-        self.fields = []
+
+        super().__init__(school)
+
         num = 0
         for item in self.school.grades:
             if int(item.sID[-3:]) > num:
@@ -19,10 +22,6 @@ class Grade(object):
         num += 1
         self.fields.append("sID")
         self.sID = "G" + ("00" + str(num))[-3:]
-        self.fields.append("name")
-        self.name = input("Input name(x to cancel):")       #班级名称
-        if self.name.upper() == "X":
-            raise Exception("User cancelled operation.")
         self.fields.append("startDate")
         self.startDate = input("Input startDate(x to cancel):") #开班日期
         if self.startDate.upper() == "X":
@@ -34,3 +33,8 @@ class Grade(object):
         self.fields.append("status")
         self.status = False
         self.school.grades.append(self)
+
+    def add(self):
+        mem = Grade(self.school)
+        self.school.bModified = True
+        print("{title} {name} is added success.".format(title=self.title.capitalize(), name=self.name))

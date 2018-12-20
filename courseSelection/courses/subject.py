@@ -6,11 +6,14 @@
 """
 __author__ = "Cliff.wang"
 
-class Subject(object):
+from courses.schoolObject import SchoolObject
+
+class Subject(SchoolObject):
 
     def __init__(self, school):
-        self.school = school
-        self.fields = []
+
+        super().__init__(school)
+
         num = 0
         for item in self.school.subjects:
             if int(item.sID[-3:]) > num:
@@ -18,10 +21,6 @@ class Subject(object):
         num += 1
         self.fields.append("sID")
         self.sID = "S" + ("00" + str(num))[-3:]
-        self.fields.append("name")
-        self.name = input("Input name(x to cancel):")       #课程名称
-        if self.name.upper() == "X":
-            raise Exception("User cancelled operation.")
         self.fields.append("weeks")
         self.weeks = input("Input weeks(x to cancel):")     #学完该课程要多少周
         if self.weeks.upper() == "X":
@@ -36,3 +35,8 @@ class Subject(object):
             raise Exception("User cancelled operation.")
         self.status = True
         self.school.subjects.append(self)
+
+    def add(self):
+        mem = Subject(self.school)
+        self.school.bModified = True
+        print("{title} {name} is added success.".format(title=self.title.capitalize(), name=self.name))

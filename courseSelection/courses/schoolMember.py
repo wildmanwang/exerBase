@@ -8,7 +8,9 @@
 """
 __author__ = "Cliff.wang"
 
-class SchoolMember(object):
+from courses.schoolObject import SchoolObject
+
+class SchoolMember(SchoolObject):
 
     menu = {
         "1": "登录",
@@ -16,14 +18,9 @@ class SchoolMember(object):
     }
 
     def __init__(self, school):
-        self.school = school
-        self.fields = []
-        self.fields.append("sID")
-        self.sID = ""                  # 编码在子类中赋值
-        self.fields.append("name")
-        self.name = input("Input {title}'s name(x to cancel):".format(title=self.title))
-        if self.name.upper() == "X":
-            raise Exception("User cancelled operation.")
+
+        super().__init__(school)
+
         self.fields.append("pwd")
         self.pwd = input("Input {title}'s password(x to cancel):".format(title=self.title))
         if self.pwd.upper() == "X":
@@ -36,7 +33,6 @@ class SchoolMember(object):
         self.birthDate = input("Input {title}'s birthDate(x to cancel):".format(title=self.title))
         if self.birthDate.upper() == "X":
             raise Exception("User cancelled operation.")
-        self.status = False
 
     def printMenu(self, menuSuper):
         strPrt = "Choose a option:\n"

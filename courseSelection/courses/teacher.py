@@ -36,6 +36,11 @@ class Teacher(SchoolMember):
         self.status = True
         self.school.teachers.append(self)
 
+    def add(self):
+        mem = Teacher(self.school)
+        self.school.bModified = True
+        print("{title} {name} is added success.".format(title=self.title.capitalize(), name=self.name))
+
 if __name__ == "__main__":
     l1 = ['a', 'b', 'c']
     l2 = ['d', 'e']

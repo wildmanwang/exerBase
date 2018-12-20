@@ -60,105 +60,10 @@ class Manager(SchoolMember):
         self.status = True
         self.school.managers.append(self)
 
-    def printList(self):
-        if title == "manager":
-            mems = self.school.managers
-        elif title == "teacher":
-            mems = self.school.teachers
-        elif title == "student":
-            mems = self.school.students
-        elif title == "subject":
-            mems = self.school.subjects
-        elif title == "grade":
-            mems = self.school.grades
-        else:
-            raise Exception("Invalid object type.")
-        sOutput = "{school}'s {title} list:\n".format(school=self.school.name, title=self.title) + "\n".rjust(40, "=")
-        for item in mems:
-            for col in item.fields:
-                if col.upper() in ("PASSWORD"):
-                    continue
-                sOutput += "{title}:{value}\t".format(title=col.capitalize(), value=getattr(item, col))
-            sOutput += "\n"
-        sOutput += "\n".rjust(40, "=")
-        print(sOutput)
-
-    def add(self, title):
-        if title == "manager":
-            mem = Manager(self)
-        elif title == "teacher":
-            mem = Teacher(self)
-        elif title == "student":
-            mem = Student(self)
-        elif title == "subject":
-            mem = Subject(self)
-        elif title == "grade":
-            mem = Grade(self)
-        else:
-            raise Exception("Invalid object type.")
-        self.bModified = True
-        print("{title} {name} is added success.".format(title=title.capitalize(), name=mem.name))
-
-    def modify(self, title):
-        if title == "manager":
-            mems = self.managers
-        elif title == "teacher":
-            mems = self.teachers
-        elif title == "student":
-            mems = self.students
-        elif title == "subject":
-            mems = self.subjects
-        elif title == "grade":
-            mems = self.grades
-        else:
-            raise Exception("Invalid object type.")
-        bFind = False
-        sInput = input("Input the ID of {title} you wanto modify:".format(title=title))
-        for item in mems:
-            if item.sID == sInput:
-                mem = item
-                bFind = True
-        if not bFind:
-            raise Exception("{title}'s ID is invalid.".format(title=title.capitalize()))
-        for col in mem.fields:
-            if col.upper() in ("SID", "PASSWORD", "SUBJECT", "TEACHER", "STATUS"):
-                continue
-            sTmp = input("Input {title}'s {col}(x to cancel):".format(title=title, col=col))
-            if sTmp.upper() == "X":
-                raise Exception("User cancelled operation.")
-            setattr(mem, col, sTmp)
-        self.bModified = True
-        print("{title} {name} is saved success.".format(title=title.capitalize(), name=mem.name))
-
-    def delete(self, title):
-        if title == "manager":
-            mems = self.managers
-        elif title == "teacher":
-            mems = self.teachers
-        elif title == "student":
-            mems = self.students
-        elif title == "subject":
-            mems = self.subjects
-        elif title == "grade":
-            mems = self.grades
-        else:
-            raise Exception("Invalid object type.")
-        bFind = False
-        sInput = input("Input the {title}'s ID you wanto delete:".format(title=title))
-        for item in mems:
-            if item.sID == sInput:
-                mem = item
-                bFind = True
-        if not bFind:
-            raise Exception("{title}'s ID is invalid.".format(title=title.capitalize()))
-        if sInput == self.sloginID:
-            raise Exception("You can't delete yourself.")
-        sInput = input("Are you sure to delete {title} {name}({ID})?yes/no".format(title=title, name=mem.name, ID=mem.sID))
-        if sInput.upper() != "YES":
-            raise Exception("User cancelled operation.")
-        mems.remove(mem)
-        self.bModified = True
-        print("{title} {name} is deleted success.".format(title=title.capitalize(), name=mem.name))
+    def add(self):
+        mem = Manager(self.school)
+        self.school.bModified = True
+        print("{title} {name} is added success.".format(title=self.title.capitalize(), name=self.name))
 
     def setSubject(self):
         # 选择班级
