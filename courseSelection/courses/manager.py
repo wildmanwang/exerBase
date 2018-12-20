@@ -1,63 +1,79 @@
-# -*- coding:utf-8 -*-
-"""
-学校
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 """
-__author__ = "Cliff.wang"
+学校管理员
+"""
 
-import pickle
-import os
+__author__ = 'Cliff Wang'
 
-from manager import Manager
-from teacher import Teacher
-from student import Student
-from subject import Subject
-from grade import Grade
+from courses.schoolMember import SchoolMember
 
-class School(object):
+class Manager(SchoolMember):
 
-    def __init__(self):
-        bCancel = False
-        if not bCancel:             #名称
-            self.name = input("Input school's name(x to cancel):")
-            if self.name.upper() == "X":
-                bCancel = True
-        if os.path.exists("data\\{name}.dat".format(name=self.name)):
-            raise Exception("School [{name}] exists already.".format(name=self.name))
-        bCancel = False
-        if not bCancel:             #地址
-            self.addr = input("Input school's addr(x to cancel):")
-            if self.addr.upper() == "X":
-                bCancel = True
-        bCancel = False
-        if not bCancel:             #电话
-            self.phone = input("Input school's phone(x to cancel):")
-            if self.phone.upper() == "X":
-                bCancel = True
-        self.managers = []          #管理员列表， 编码格式：1###
-        self.subjects = []          #课程列表，编码格式：S###
-        self.grades = []            #班级列表，编码格式：G###
-        self.teachers = []          #老师列表，编码格式：2###
-        self.students = []          #学生列表，编码格式：3###
-        self.bModified = False          #是否被修改，修改后要保存
-        self.bLogin = False             #是否已登录 True：已登录 False：未登录
-        self.iLoginType = 0              #登录类型 0：未登录 1：管理员 2：老师 3：学生
-        self.sloginID = ""               #登录账号
+    menu = {
+        "1": "管理员管理-manager",
+        "11": "查看管理员列表-printList",
+        "12": "新增管理员-add",
+        "13": "修改管理员-modify",
+        "14": "删除管理员-delete",
+        "10": "退出管理员管理-",
+        "2": "课程管理-subject",
+        "21": "查看课程列表-printList",
+        "22": "新增课程-add",
+        "23": "修改课程-modify",
+        "24": "删除课程-delete",
+        "20": "退出课程管理-",
+        "3": "老师管理-teacher",
+        "31": "查看老师列表-printList",
+        "32": "招聘老师-add",
+        "33": "修改管理员-modify",
+        "34": "删除老师-delete",
+        "30": "退出老师管理-",
+        "4": "班级管理-grade",
+        "41": "查看班级列表-printList",
+        "42": "新增班级-add",
+        "43": "修改班级-modify",
+        "44": "删除班级-delete",
+        "45": "指定课程-setSubject",
+        "46": "指定老师-setTeacher",
+        "47": "开课-start",
+        "40": "退出班级管理-",
+        "5": "学生管理-student",
+        "51": "查看学生列表-printList",
+        "54": "开除学生-delete",
+        "50": "退出学生管理-",
+        "6": "查看我的资料-printSelf",
+        "7": "修改密码-password",
+        "0": "退出登录-",
+    }
 
-    def printList(self, title):
+    def __init__(self, school):
+        self.title = "manager"
+        super().__init__(school)
+        num = 0
+        for item in self.school.managers:
+            if int(item.sID[-3:]) > num:
+                num = int(item.sID[-3:])
+        num += 1
+        self.sID = "1" + ("00" + str(num))[-3:]
+        self.status = True
+        self.school.managers.append(self)
+
+    def printList(self):
         if title == "manager":
-            mems = self.managers
+            mems = self.school.managers
         elif title == "teacher":
-            mems = self.teachers
+            mems = self.school.teachers
         elif title == "student":
-            mems = self.students
+            mems = self.school.students
         elif title == "subject":
-            mems = self.subjects
+            mems = self.school.subjects
         elif title == "grade":
-            mems = self.grades
+            mems = self.school.grades
         else:
             raise Exception("Invalid object type.")
-        sOutput = "{school}'s {title} list:\n".format(school=self.name, title=title) + "\n".rjust(40, "=")
+        sOutput = "{school}'s {title} list:\n".format(school=self.school.name, title=self.title) + "\n".rjust(40, "=")
         for item in mems:
             for col in item.fields:
                 if col.upper() in ("PASSWORD"):
@@ -249,74 +265,5 @@ class School(object):
         self.bModified = True
         print("Grade[{grade}] is enabled success.".format(grade=grade.name))
 
-    @classmethod
-    def dataDump(cls, obj):
-        f = open("data\\{name}.dat".format(name=obj.name), "wb")
-        pickle.dump(obj, f)
-        f.close()
-        obj.bModified = False
-
-    @classmethod
-    def dataLoad(cls, name):
-        f = open("data\\{name}.dat".format(name=name), "rb")
-        newObject = pickle.load(f)
-        f.close()
-        print(newObject.name, newObject.addr)
-        return newObject
-
-    def login(self):
-        print("Login info".center(30, "-"))
-        sID = input("Input your sID:")
-        password = input("Input your password:")
-        if sID[:1] == "1":
-            members = self.managers
-        elif sID[:1] == "2":
-            members = self.teachers
-        elif sID[:1] == "3":
-            members = self.students
-        else:
-            raise Exception("Invalid school ID.")
-        bSuccess = False
-        for item in members:
-            if item.sID == sID and item.pwd == password:
-                bSuccess = True
-                break
-        if bSuccess:
-            self.bLogin = True
-            self.iLoginType = int(sID[:1])
-            self.sloginID = sID
-            if self.iLoginType == 1:
-                print("Welcome to courses selection system for Managers")
-            elif self.iLoginType == 2:
-                print("Welcome to courses selection system for Teachers")
-            elif self.iLoginType == 3:
-                print("Welcome to courses selection system for Students")
-            else:
-                raise Exception("Login type invalid.")
-        else:
-            raise Exception("School ID eror or password error.")
-        return item
-
-    def logout(self):
-        sInput = input("Are you sure exit?yes/no")
-        if sInput.upper() == "YES":
-            print("{name} logged out.".format(name=self.sloginID.capitalize()))
-            self.bLogin = False
-            self.iLoginType = 0
-            self.sloginID = ""
-        else:
-            print("Log out is cancel.")
-
-    @classmethod
-    def schoolAdd(cls):
-        try:
-            school = School()
-        except Exception as e:
-            print(str(e))
-        else:
-            Manager(school)
-            School.dataDump(school)
-
 if __name__ == "__main__":
-    if 1 == 1:
-        School.schoolAdd()
+    pass

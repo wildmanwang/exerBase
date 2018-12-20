@@ -8,7 +8,7 @@
 __author__ = 'Cliff Wang'
 
 import os
-from school import School
+from courses.school import School
 
 if __name__ == "__main__":
     schs = os.listdir(".\\data\\")
@@ -55,16 +55,7 @@ if __name__ == "__main__":
                 else:
                     try:
                         sFun = mem.menu[curLevel + sChoose].split("-")[1]
-                        if sFun in ["printList", "add", "modify", "delete"]:
-                            for key in mem.menu.keys():
-                                if key == curLevel:
-                                    sSuper = mem.menu[curLevel].split("-")[1]
-                                    break
-                            getattr(mem.school, sFun)(sSuper)
-                        elif sFun in ["printSelf", "password"]:
-                            getattr(mem, sFun)()
-                        else:
-                            getattr(mem.school, sFun)()
+                        getattr(mem, sFun)()
                         if school.bModified:
                             School.dataDump(school)
                     except Exception as e:

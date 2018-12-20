@@ -15,7 +15,7 @@
 """
 __author__ = "Cliff.wang"
 
-from schoolMember import SchoolMember
+from courses.schoolMember import SchoolMember
 
 class Student(SchoolMember):
 
