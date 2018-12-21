@@ -42,15 +42,17 @@ class School(object):
         self.sloginID = ""               #登录账号
 
     @classmethod
-    def dataDump(cls, obj):
-        f = open("data\\{name}.dat".format(name=obj.name), "wb")
+    def dataDump(cls, sPathData, obj):
+        sFile = os.path.join(sPathData, "{name}.dat".format(name=obj.name))
+        f = open(sFile, "wb")
         pickle.dump(obj, f)
         f.close()
         obj.bModified = False
 
     @classmethod
-    def dataLoad(cls, name):
-        f = open("data\\{name}.dat".format(name=name), "rb")
+    def dataLoad(cls, sPathData, name):
+        sFile = os.path.join(sPathData, "{name}.dat".format(name=name))
+        f = open(sFile, "rb")
         newObject = pickle.load(f)
         f.close()
         print(newObject.name, newObject.addr)
@@ -101,13 +103,16 @@ class School(object):
 
     @classmethod
     def schoolAdd(cls):
+        import sys
+        sPathRoot = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        sPathData = os.path.join(sPathRoot, "data")
         try:
             school = School()
         except Exception as e:
             print(str(e))
         else:
             Manager(school)
-            School.dataDump(school)
+            School.dataDump(sPathData, school)
 
 if __name__ == "__main__":
     if 1 == 1:
