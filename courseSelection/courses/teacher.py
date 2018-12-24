@@ -9,10 +9,10 @@ from courses.schoolMember import SchoolMember
 class Teacher(SchoolMember):
 
     menu = {
-        "1": "选择我的班级-chooseGrade",
-        "2": "查看学生列表-printList",
-        "3": "录入学生成绩-modify",
-        "4": "查看学生详情-printStudent",
+        "1": "查看我的班级-printGrades",
+        "2": "查看学生列表-printStudents",
+        "3": "录入学生成绩-modifyCard",
+        "4": "查看学生详情-printCard",
         "5": "辞职-resign",
         "6": "查看我的资料-printSelf",
         "7": "修改密码-password",
@@ -36,10 +36,25 @@ class Teacher(SchoolMember):
         self.status = True
         self.school.teachers.append(self)
 
-    def add(self):
-        mem = Teacher(self.school)
-        self.school.bModified = True
-        print("{title} {name} is added success.".format(title=self.title.capitalize(), name=self.name))
+    def printGrades(self):
+        self.school.printObjects("grade", self.grades)
+
+    def printStudents(self):
+        grade = self.school.chooseObject("grade", self.grades)
+        self.school.printObjects("student", grade.students)
+
+    def modifyCard(self):
+        grade = self.school.chooseObject("grade", self.grades)
+        student = self.school.chooseObject("student", grade)
+        self.school.modifyObject("student", student)
+
+    def printCard(self):
+        grade = self.school.chooseObject("grade", self.grades)
+        student = self.school.chooseObject("student", grade)
+        student.printSelf()
+
+    def resign(self):
+        pass
 
 if __name__ == "__main__":
     l1 = ['a', 'b', 'c']

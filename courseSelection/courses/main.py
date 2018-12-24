@@ -18,7 +18,9 @@ def course_main(sPathRoot):
     if num == 0:
         ls_menu = "No school!"
     else:
+        num = 0
         for item in schs:
+            num += 1
             ls_menu += "{num}\t{name}\n".format(num=num, name=item[:-4])
         sInput = input(ls_menu)
         while not sInput.isdigit() or int(sInput) < 1 or int(sInput) > num:
@@ -35,12 +37,7 @@ def course_main(sPathRoot):
             while curLevel + sChoose != "0":
                 mem.printMenu(curLevel)
                 sChoose = input("Input your choice:")
-                bSuperMenu = False
-                for key in mem.menu.keys():
-                    iLen = len(curLevel + sChoose)
-                    if key[:iLen] == curLevel + sChoose and len(key) > iLen:
-                        bSuperMenu = True
-                        break
+                bSuperMenu = mem.hasChildren(curLevel + sChoose)
                 if bSuperMenu:
                     curLevel = curLevel + sChoose
                 elif sChoose == "0":
@@ -53,8 +50,17 @@ def course_main(sPathRoot):
                             sChoose = "N"
                 else:
                     try:
+                        if len(curLevel) > 0:
+                            sSuper = mem.menu[curLevel].split("-")[1]
+                        else:
+                            sSuper = ""
                         sFun = mem.menu[curLevel + sChoose].split("-")[1]
-                        getattr(mem, sFun)()
+                        if len(sSuper) > 0 and sFun.upper() in ("PRINTLIST", "ADD", "MODIFY", "DELETE"):
+                            getattr(mem.school, sFun)(sSuper)
+                        elif sFun.upper() in ("PRINTSELF", "PASSWORD", "PRINTGRADES", "PRINTSTUDENTS", "MODIFYCARD", "PRINTCARD", "RESIGN"):
+                            getattr(mem, sFun)()
+                        else:
+                            getattr(mem.school, sFun)()
                         if school.bModified:
                             School.dataDump(sPathData, school)
                     except Exception as e:

@@ -13,7 +13,6 @@ from courses.schoolObject import SchoolObject
 class SchoolMember(SchoolObject):
 
     menu = {
-        "1": "登录",
         "0": "退出"
     }
 
@@ -41,6 +40,15 @@ class SchoolMember(SchoolObject):
             if len(key) == level and key[:level - 1] == menuSuper:
                 strPrt += "\t{num}\t{menu}\n".format(num=key[-1:], menu=item.split("-")[0])
         print(strPrt)
+
+    def hasChildren(self, flag):
+        bChildren = False
+        iLen = len(flag)
+        for key in self.menu.keys():
+            if key[:len(flag)] == flag and len(key) > iLen:
+                bChildren = True
+                break
+        return bChildren
 
     def printSelf(self):
         sOutput = "{title} {name}'s info".format(title=self.title.capitalize(), name=self.name).center(40, "=") + "\n"

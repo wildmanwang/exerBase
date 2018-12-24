@@ -12,7 +12,7 @@ from courses.schoolObject import SchoolObject
 class Grade(SchoolObject):
 
     def __init__(self, school):
-
+        self.title = "grade"
         super().__init__(school)
 
         num = 0
@@ -33,8 +33,4 @@ class Grade(SchoolObject):
         self.fields.append("status")
         self.status = False
         self.school.grades.append(self)
-
-    def add(self):
-        mem = Grade(self.school)
-        self.school.bModified = True
-        print("{title} {name} is added success.".format(title=self.title.capitalize(), name=self.name))
+        self.students = []

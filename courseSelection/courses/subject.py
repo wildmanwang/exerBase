@@ -11,7 +11,7 @@ from courses.schoolObject import SchoolObject
 class Subject(SchoolObject):
 
     def __init__(self, school):
-
+        self.title = "subject"
         super().__init__(school)
 
         num = 0
@@ -35,8 +35,3 @@ class Subject(SchoolObject):
             raise Exception("User cancelled operation.")
         self.status = True
         self.school.subjects.append(self)
-
-    def add(self):
-        mem = Subject(self.school)
-        self.school.bModified = True
-        print("{title} {name} is added success.".format(title=self.title.capitalize(), name=self.name))

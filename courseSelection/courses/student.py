@@ -46,10 +46,5 @@ class Student(SchoolMember):
         self.status = True
         self.school.students.append(self)
 
-    def add(self):
-        mem = Student(self.school)
-        self.school.bModified = True
-        print("{title} {name} is added success.".format(title=self.title.capitalize(), name=self.name))
-
 if __name__ == "__main__":
     print("".center(40, "="))
