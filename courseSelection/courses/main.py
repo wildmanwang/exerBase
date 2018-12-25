@@ -27,6 +27,14 @@ def course_main(sPathRoot):
             sInput = input(ls_menu)
         name = schs[int(sInput) - 1][:-4]
         school = School.dataLoad(sPathData, name)
+        sChoose = input("1 Reg student\n2 Login\nInput your choice:")
+        if sChoose == "1":
+            try:
+                school.add("student")
+            except Exception as e:
+                print(str(e))
+            else:
+                School.dataDump(sPathData, school)
         try:
             mem = school.login()
         except Exception as e:

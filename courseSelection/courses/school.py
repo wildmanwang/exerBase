@@ -171,7 +171,7 @@ class School(object):
         else:
             raise Exception("Invalid object type.")
         self.bModified = True
-        print("{title} {name} is added success.".format(title=title.capitalize(), name=self.name))
+        print("{title} {name} is added success,sID=[{ID}].".format(title=title.capitalize(), ID=mem.sID, name=mem.name))
 
     def modify(self, title):
         if title == "manager":

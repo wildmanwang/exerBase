@@ -54,7 +54,15 @@ class Teacher(SchoolMember):
         student.printSelf()
 
     def resign(self):
-        pass
+        sInput = input("Are you sure to resign?yes/no")
+        if sInput.upper() != "YES":
+            raise Exception("User cancelled operation.")
+        for item in self.school.grades:
+            if item.teacher == "[{code}]name".format(code=self.sID, name=self.name):
+                item.teacher = "<Not yet set up>"
+                item.status = False
+        self.school.teachers.remove(self)
+        self.school.bModified = True
 
 if __name__ == "__main__":
     l1 = ['a', 'b', 'c']
