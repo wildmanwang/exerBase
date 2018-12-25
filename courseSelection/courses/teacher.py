@@ -32,25 +32,37 @@ class Teacher(SchoolMember):
         self.salary = input("Input salary(x to cancel):")
         if self.salary.upper() == "X":
             raise Exception("User cancelled operation.")
-        self.grades = []
         self.status = True
         self.school.teachers.append(self)
 
     def printGrades(self):
-        self.school.printObjects("grade", self.grades)
+        subs = [item for item in self.school.grades if item.teacher == "[{code}]{name}".format(code=self.sID, name=self.name)]
+        self.school.printObjects("grade", subs)
 
     def printStudents(self):
-        grade = self.school.chooseObject("grade", self.grades)
+        subs = [item for item in self.school.grades if item.teacher == "[{code}]{name}".format(code=self.sID, name=self.name)]
+        grade = self.school.chooseObject("grade", subs)
         self.school.printObjects("student", grade.students)
 
     def modifyCard(self):
-        grade = self.school.chooseObject("grade", self.grades)
-        student = self.school.chooseObject("student", grade)
-        self.school.modifyObject("student", student)
+        subs = [item for item in self.school.grades if item.teacher == "[{code}]{name}".format(code=self.sID, name=self.name)]
+        grade = self.school.chooseObject("grade", subs)
+        student = self.school.chooseObject("student", grade.students)
+        fScore = -1
+        while fScore == -1:
+            score = input("Input {student}'s score in {grade}:".format(student=student.name, grade=grade.name))
+            if score.isdigit():
+                fScore = float(score)
+            else:
+                print("Input score is invalid.")
+        student.score = fScore
+        self.school.bModified = True
+        print("You input {student}'s score success.".format(student=student.name))
 
     def printCard(self):
-        grade = self.school.chooseObject("grade", self.grades)
-        student = self.school.chooseObject("student", grade)
+        subs = [item for item in self.school.grades if item.teacher == "[{code}]{name}".format(code=self.sID, name=self.name)]
+        grade = self.school.chooseObject("grade", subs)
+        student = self.school.chooseObject("student", grade.students)
         student.printSelf()
 
     def resign(self):

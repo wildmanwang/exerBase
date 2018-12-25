@@ -110,6 +110,7 @@ class School(object):
         sOutPut = "Select a {title}:\n".format(title=title)
         for item in objs:
             sOutPut += "{code}\t{name}.\n".format(code=item.sID, name=item.name)
+        sOutPut += "Input your choice:"
         sInput = input(sOutPut)
         bFind = False
         for item in objs:
@@ -133,7 +134,7 @@ class School(object):
 
     def modifyObject(self, title, obj):
         for col in obj.fields:
-            if col.upper() in ("SID", "PASSWORD", "SUBJECT", "TEACHER", "STATUS"):
+            if col.upper() in ("SID", "PASSWORD", "SUBJECT", "TEACHER", "ENROLLDATE", "STATUS"):
                 continue
             sTmp = input("Input {title}'s {col}(x to cancel):".format(title=title, col=col))
             if sTmp.upper() == "X":
@@ -263,11 +264,10 @@ class School(object):
         sPathData = os.path.join(sPathRoot, "data")
         try:
             school = School()
+            school.add("manager")
+            School.dataDump(sPathData, school)
         except Exception as e:
             print(str(e))
-        else:
-            Manager(school)
-            School.dataDump(sPathData, school)
 
 if __name__ == "__main__":
     if 1 == 1:

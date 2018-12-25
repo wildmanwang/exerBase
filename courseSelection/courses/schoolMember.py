@@ -55,7 +55,7 @@ class SchoolMember(SchoolObject):
         for col in self.fields:
             if col.upper() == "PWD" or col.upper() == "PASSWORD":
                 continue
-            sOutput += "{col}{space}:{value}\n".format(col=col.capitalize().rjust(15, " "), space=" " * 5, value=getattr(self, col).ljust(20, " "))
+            sOutput += "{col}{space}{value}\n".format(col=col.capitalize().rjust(15, " "), space=" " * 10, value=str(getattr(self, col)).ljust(15, " "))
         sOutput += "end info".center(40, "=")
         print(sOutput)
 

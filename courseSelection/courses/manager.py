@@ -27,7 +27,7 @@ class Manager(SchoolMember):
         "3": "老师管理-teacher",
         "31": "查看老师列表-printList",
         "32": "招聘老师-add",
-        "33": "修改管理员-modify",
+        "33": "修改老师-modify",
         "34": "删除老师-delete",
         "30": "退出老师管理-",
         "4": "班级管理-grade",

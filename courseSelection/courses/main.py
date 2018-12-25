@@ -16,12 +16,15 @@ def course_main(sPathRoot):
     ls_menu = "Select a school:\n"
     num = len(schs)
     if num == 0:
-        ls_menu = "No school!"
+        sInput = input("No school!\nYou want to create a school?yes/no")
+        if sInput.upper() == "YES":
+            School.schoolAdd()
     else:
         num = 0
         for item in schs:
             num += 1
             ls_menu += "{num}\t{name}\n".format(num=num, name=item[:-4])
+        ls_menu += "Input your choice:"
         sInput = input(ls_menu)
         while not sInput.isdigit() or int(sInput) < 1 or int(sInput) > num:
             sInput = input(ls_menu)
@@ -65,10 +68,10 @@ def course_main(sPathRoot):
                         sFun = mem.menu[curLevel + sChoose].split("-")[1]
                         if len(sSuper) > 0 and sFun.upper() in ("PRINTLIST", "ADD", "MODIFY", "DELETE"):
                             getattr(mem.school, sFun)(sSuper)
-                        elif sFun.upper() in ("PRINTSELF", "PASSWORD", "PRINTGRADES", "PRINTSTUDENTS", "MODIFYCARD", "PRINTCARD", "RESIGN"):
-                            getattr(mem, sFun)()
-                        else:
+                        elif sFun.upper() in ("GRADESETSUBJECT", "GRADESETTEACHER", "GRADESTART"):
                             getattr(mem.school, sFun)()
+                        else:
+                            getattr(mem, sFun)()
                         if school.bModified:
                             School.dataDump(sPathData, school)
                     except Exception as e:
