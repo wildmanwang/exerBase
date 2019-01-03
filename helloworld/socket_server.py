@@ -11,12 +11,13 @@ server.listen()
 while True:
     conn, addr = server.accept()
     while True:
-        data = conn.recv(1024)
-        if not data:
+        dataRecv = conn.recv(1024)
+        if not dataRecv:
             print("addr:[{addr}] is lost.".format(addr=addr))
             break
-        print("recv:", data.decode("utf-8"))
-        myData = "哦哦，" + data.decode("utf-8")
-        conn.send(myData.encode("utf-8"))
+        print("{addr}:{data}".format(addr=addr, data=dataRecv.decode("utf-8")))
+        dataSend = "哦哦，" + dataRecv.decode("utf-8")
+        print("I said:", dataSend)
+        conn.send(dataSend.encode("utf-8"))
 
 server.close()

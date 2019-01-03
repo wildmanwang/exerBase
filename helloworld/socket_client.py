@@ -6,14 +6,15 @@ __author__ = "Cliff.wang"
 import socket
 
 client = socket.socket()
-client.connect(("localhost", 1212))
+sServer = "localhost"
+client.connect((sServer, 1212))
 while True:
-    sInput = input("What you say:").strip()
-    if len(sInput) == 0:
+    dataSend = input("I said:").strip()
+    if len(dataSend) == 0:
         continue
-    elif sInput == "exit":
+    elif dataSend == "exit":
         break
-    client.send(sInput.encode("utf-8"))
-    data = client.recv(1024)
-    print("recv:", data.decode("utf-8"))
+    client.send(dataSend.encode("utf-8"))
+    dataRecv = client.recv(1024)
+    print("{addr}:{data}".format(addr=sServer, data=dataRecv.decode("utf-8")))
 client.close()
