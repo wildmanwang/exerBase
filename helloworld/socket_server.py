@@ -4,6 +4,7 @@
 __author__ = "Cliff.wang"
 
 import socket
+import os
 
 server = socket.socket()
 server.bind(("localhost", 1212))
@@ -12,12 +13,15 @@ while True:
     conn, addr = server.accept()
     while True:
         dataRecv = conn.recv(1024)
+        dataRecv = dataRecv.decode("utf-8")
         if not dataRecv:
             print("addr:[{addr}] is lost.".format(addr=addr))
             break
-        print("{addr}:{data}".format(addr=addr, data=dataRecv.decode("utf-8")))
-        dataSend = "哦哦，" + dataRecv.decode("utf-8")
-        print("I said:", dataSend)
-        conn.send(dataSend.encode("utf-8"))
+        sResult = os.popen(dataRecv).read()
+        print(sResult)
+        iLen = len(sResult)
+        sResult = sResult.encode("utf-8")
+        conn.send(str(iLen).encode("utf-8"))
+        conn.send(sResult)
 
 server.close()
