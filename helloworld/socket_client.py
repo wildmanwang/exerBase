@@ -16,11 +16,14 @@ while True:
         break
     client.send(dataSend.encode("utf-8"))
     dataRecv = client.recv(1024)
+    client.send("收到数据".encode("utf-8"))     # 自动响应，防止粘包
     iRecv = 0
     sRecv = b""
     while iRecv < int(dataRecv.decode()):
         sTmp = client.recv(1024)
         sRecv += sTmp
+        print(type(sTmp))
+        print(sTmp.decode())
         iRecv += len(sTmp.decode())
     print(sRecv.decode("utf-8"))
 

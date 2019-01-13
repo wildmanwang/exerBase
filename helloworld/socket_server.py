@@ -12,16 +12,18 @@ server.listen()
 while True:
     conn, addr = server.accept()
     while True:
-        dataRecv = conn.recv(1024)
-        dataRecv = dataRecv.decode("utf-8")
-        if not dataRecv:
-            print("addr:[{addr}] is lost.".format(addr=addr))
+        try:
+            dataRecv = conn.recv(1024)
+        except ConnectionResetError as e:
+            print("Err:", e)
             break
+        dataRecv = dataRecv.decode("utf-8")
         sResult = os.popen(dataRecv).read()
         print(sResult)
         iLen = len(sResult)
         sResult = sResult.encode("utf-8")
         conn.send(str(iLen).encode("utf-8"))
+        conn.recv(1024)                     # 防止粘包
         conn.send(sResult)
 
 server.close()

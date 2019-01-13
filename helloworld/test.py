@@ -3,6 +3,13 @@
 """
 __author__ = "Cliff.wang"
 
-assert type("aaa") is str
-exit("aaa")
-print("OK")
+import hashlib
+
+m = hashlib.md5()
+m.update(b"test")
+print(m.hexdigest())
+print(b"abc".decode())
+ss = m.digest()
+print(type(ss))
+ss = ss.decode()
+print(ss)
