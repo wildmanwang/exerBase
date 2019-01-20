@@ -11,12 +11,16 @@ Ftp练习要求：
 
 项目结构：
 ftpManager
-    bin
-    conf
-    core
-    data
-        Jack
-        Sunny
-    log
+    ftp_client/
+        socket_client.py
+    ftp_server/
+        bin/
+        conf/
+        core/
+            socket_server.py
+        data/
+            Jack
+            Sunny
+        log/
     .gitignore
     README
