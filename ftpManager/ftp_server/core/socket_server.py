@@ -22,7 +22,7 @@ class ftpServer(socketserver.BaseRequestHandler):
         while True:
             try:
                 self.data = self.request.recv(1024).strip()
-                self.data = json.loads(self.data.decode())
+                self.data = json.loads(self.data.decode("utf-8"))
                 self.action = self.data["action"]
                 if hasattr(self, "srv_{action}".format(action=self.action)):
                     func = getattr(self, "srv_{action}".format(action=self.action))

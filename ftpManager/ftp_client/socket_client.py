@@ -16,8 +16,8 @@ class FtpClient(object):
         self.path = "\\"
         self.client = socket.socket()
 
-    def connect(self, ip, port):
-        self.client.connect((ip, port))
+    def connect(self, host, port):
+        self.client.connect((host, port))
 
     def interactive(self):
         """
