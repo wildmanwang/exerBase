@@ -5,31 +5,40 @@ __author__ = "Cliff.wang"
 
 import socketserver
 import json
+import hashlib
+import os
 
 class ftpServer(socketserver.BaseRequestHandler):
+
+    ResponseDict = {
+        100:"命令解析成功",
+        101:"文件接收成功",
+        102:"文件校验成功",
+        103:"开始发送数据",
+        200:"命令解析失败",
+        201:"个人空间不足",
+        202:"权限不足",
+        203:"指定文件不存在",
+        204:"文件校验失败",
+        209:"用户取消操作"
+    }
 
     def handle(self):
         """
         处理客户端交互
-        100     命令解析成功
-        101     准备接收文件
-        102     准备发送文件
-        200     命令解析失败
-        201     个人空间不足
-        202     权限不足
         :return:
         """
         while True:
             try:
                 self.data = self.request.recv(1024).strip()
-                self.data = json.loads(self.data.decode("utf-8"))
+                self.data = json.loads(self.data.decode())
                 self.action = self.data["action"]
                 if hasattr(self, "srv_{action}".format(action=self.action)):
                     func = getattr(self, "srv_{action}".format(action=self.action))
-                    self.request.send(json.dumps({"code":100, "info":"收到指令，准备就绪"}).encode("utf-8"))
+                    self.__putInter(100)
                     func(self.data)
                 else:
-                    self.request.send(json.dumps({"code":200, "info":"无法解析的命令"}).encode("utf-8"))
+                    self.__putInter(200)
                     continue
             except Exception as e:
                 print(e)
@@ -46,14 +55,15 @@ class ftpServer(socketserver.BaseRequestHandler):
 
     def srv_put(self, args):
         """
-        接收上传文件
+        响应上传文件
         :param args:
         :return:
         """
         fileName = args["fileName"]
         fileSize = args["fileSize"]
         recievedSize = 0
-        f = open(fileName.split(".")[0] + "_new." + fileName.split(".")[1], "wb")
+        f = open(fileName, "wb")
+        md5 = hashlib.md5()
         while fileSize - recievedSize > 0:
             if fileSize - recievedSize >= 1024:
                 curSize = 1024
@@ -61,12 +71,64 @@ class ftpServer(socketserver.BaseRequestHandler):
                 curSize = fileSize - recievedSize
             curData = self.request.recv(curSize)
             f.write(curData)
-            recievedSize += curSize
-            print("{num}/{sum}".format(num=recievedSize, sum=fileSize))
+            recievedSize += len(curData)
+            md5.update(curData)
         f.close()
+        self.__putInter(101)
+        codeTrans = self.request.recv(1024).strip().decode()
+        codeCompu = md5.hexdigest()
+        if codeTrans == codeCompu:
+            self.__putInter(102)
+        else:
+            self.__putInter(204)
+            os.remove(fileName)
 
     def srv_get(self, args):
+        """
+        响应下载文件
+        :param args:
+        :return:
+        """
+        responseData = self.request.recv(1024).strip()
+        responseData = responseData.decode()
+        if responseData != "OK":
+            self.__putInter(209)
+            return
+
+        fileName = args["fileName"]
+        if not os.path.isfile(fileName):
+            self.__putInter(203)
+            return
+
+        self.__putInter(103, size=os.path.getsize(fileName))
+        f = open(fileName, "rb")
+        md5 = hashlib.md5()
+        for line in f:
+            self.request.send(line)
+            md5.update(line)
+        f.close()
+        codeCompu = md5.hexdigest()
+        codeTrans = self.request.recv(1024).strip().decode()
+        if codeCompu == codeTrans:
+            self.__putInter(102)
+        else:
+            self.__putInter(204)
+
+    def __getInter(self):
+        """
+        获取交互信息
+        :return:
+        """
         pass
+
+    def __putInter(self, code, **kwargs):
+        """
+        发送交互信息
+        :return:
+        """
+        data = {"code":code, "info":ftpServer.ResponseDict[code]}
+        data.update(kwargs)
+        self.request.send(json.dumps(data).encode())
 
 if __name__ == "__main__":
     HOST, PORT = "localhost", 9999

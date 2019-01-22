@@ -6,6 +6,7 @@ __author__ = "Cliff.wang"
 import socket
 import os
 import json
+import hashlib
 
 class FtpClient(object):
 
@@ -48,8 +49,8 @@ class FtpClient(object):
         """
         listHelp = {
             "cd pathname":"切换目录",
-            "put filename":"上传文件",
-            "get filename":"下载文件",
+            "put filename newfilename":"上传文件",
+            "get filename newfilename":"下载文件",
             "exit":"退出"
         }
         strHelp = "没有找到对应的指令。帮助如下："
@@ -79,31 +80,86 @@ class FtpClient(object):
         :param strCmd:
         :return:
         """
-        fileName = strCmd.split()[1]
-        if os.path.isfile(fileName):
-            fileSize = os.stat(fileName).st_size
+        cmdList = strCmd.split()
+        if len(cmdList) < 2:
+            print("请指定上传文件名")
+            return
+
+        if os.path.isfile(cmdList[1]):
+            fileSize = os.path.getsize(cmdList[1])
             fileInfo = {
                 "action":"put",
-                "fileName":fileName,
+                "fileName":cmdList[2] if len(cmdList) >= 3 else cmdList[1],
                 "fileSize":fileSize
             }
-            self.client.send(json.dumps(fileInfo).encode("utf-8"))
-            responseData = json.loads(self.client.recv(1024).decode("utf-8"))
+            self.client.send(json.dumps(fileInfo).encode())
+            responseData = self.__getResponse()
             if responseData["code"] == 100:  #开始上传
-                f = open(fileName, "rb")
+                f = open(cmdList[1], "rb")
                 sendedSize = 0
+                md5 = hashlib.md5()
                 for line in f:
                     self.client.send(line)
                     sendedSize += len(line)
-                    print(sendedSize)
+                    md5.update(line)
                 f.close()
-            else:
-                print("Error code:{code},info:{info}".format(code=responseData["code"], info=responseData["info"]))
+                responseData = self.__getResponse()
+                if responseData["code"] == 101:
+                    self.client.send(md5.hexdigest().encode())
+                    responseData = self.__getResponse()
         else:
-            print(fileName, " is not exists.")
+            print(cmdList[1], " is not exists.")
 
     def cmd_get(self, strCmd):
-        pass
+        """
+        下载文件
+        :param strCmd:
+        :return:
+        """
+        cmdList = strCmd.split()
+        if len(cmdList) < 2:
+            print("请指定下载文件名")
+            return
+
+        fileInfo = {
+            "action":"get",
+            "fileName":cmdList[1]
+        }
+        self.client.send(json.dumps(fileInfo).encode())
+        responseData = self.__getResponse()
+        if responseData["code"] == 100:
+            self.client.send(b"OK")
+            responseData = self.__getResponse()
+            if responseData["code"] != 103:
+                return
+
+            fileName = cmdList[2] if len(cmdList) >= 3 else cmdList[1]
+            fileSize = responseData["size"]
+            recievedSize = 0
+            f = open(fileName, "wb")
+            md5 = hashlib.md5()
+            while fileSize - recievedSize > 0:
+                if fileSize - recievedSize >= 1024:
+                    curSize = 1024
+                else:
+                    curSize = fileSize - recievedSize
+                curData = self.client.recv(curSize)
+                f.write(curData)
+                recievedSize += len(curData)
+                md5.update(curData)
+            f.close()
+            self.client.send(md5.hexdigest().encode())
+            self.__getResponse()
+
+    def __getResponse(self):
+        """
+        获取服务器响应
+        :return:
+        """
+        data = self.client.recv(1024).strip()
+        data = json.loads(data.decode())
+        print("{code}\t{info}".format(code=data["code"], info=data["info"]))
+        return data
 
 if __name__ == "__main__":
     client = FtpClient()
