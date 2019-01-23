@@ -107,6 +107,7 @@ class FtpClient(object):
                         print("█", end="", flush=True)
                         step += 1
                 f.close()
+                print("")
                 responseData = self.__getResponse()
                 if responseData["code"] == 101:
                     self.__putMsg(md5.hexdigest())
@@ -156,6 +157,7 @@ class FtpClient(object):
                     print("█", end="", flush=True)
                     step += 1
             f.close()
+            print("")
             self.__putMsg(md5.hexdigest())
             self.__getResponse()
 

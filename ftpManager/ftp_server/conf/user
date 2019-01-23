@@ -1,4 +1,10 @@
 [general]
-rootPath=E:\Cliff\study\python\exerBase\ftpManager\ftp_server\data
-initSize=20M
-increaseSize=10M
+rootpath = E:\AI\Python\exerBase\ftpManager\ftp_server\data
+initsize = 20M
+increasesize = 10M
+
+[Cliff]
+name = 老王
+password = e10adc3949ba59abbe56e057f20f883e
+storagesize = 20M
+
