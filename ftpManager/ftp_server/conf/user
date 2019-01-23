@@ -1,0 +1,4 @@
+[general]
+rootPath=E:\Cliff\study\python\exerBase\ftpManager\ftp_server\data
+initSize=20M
+increaseSize=10M

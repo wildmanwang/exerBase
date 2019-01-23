@@ -14,7 +14,7 @@ class FtpClient(object):
         self.host = "localhost"
         self.port = 9999
         self.name = ""
-        self.path = "\\"
+        self.path = "home\\"
         self.client = socket.socket()
 
     def connect(self, host, port):
@@ -87,25 +87,29 @@ class FtpClient(object):
 
         if os.path.isfile(cmdList[1]):
             fileSize = os.path.getsize(cmdList[1])
-            fileInfo = {
+            cmdInfo = {
                 "action":"put",
                 "fileName":cmdList[2] if len(cmdList) >= 3 else cmdList[1],
                 "fileSize":fileSize
             }
-            self.client.send(json.dumps(fileInfo).encode())
+            self.__putMsg(cmdInfo)
             responseData = self.__getResponse()
             if responseData["code"] == 100:  #开始上传
                 f = open(cmdList[1], "rb")
                 sendedSize = 0
+                step = 0
                 md5 = hashlib.md5()
                 for line in f:
                     self.client.send(line)
                     sendedSize += len(line)
                     md5.update(line)
+                    if int(sendedSize / fileSize * 100 / 5) > step:
+                        print("█", end="", flush=True)
+                        step += 1
                 f.close()
                 responseData = self.__getResponse()
                 if responseData["code"] == 101:
-                    self.client.send(md5.hexdigest().encode())
+                    self.__putMsg(md5.hexdigest())
                     responseData = self.__getResponse()
         else:
             print(cmdList[1], " is not exists.")
@@ -121,14 +125,14 @@ class FtpClient(object):
             print("请指定下载文件名")
             return
 
-        fileInfo = {
+        cmdInfo = {
             "action":"get",
             "fileName":cmdList[1]
         }
-        self.client.send(json.dumps(fileInfo).encode())
+        self.__putMsg(cmdInfo)
         responseData = self.__getResponse()
         if responseData["code"] == 100:
-            self.client.send(b"OK")
+            self.__putMsg("OK")
             responseData = self.__getResponse()
             if responseData["code"] != 103:
                 return
@@ -137,6 +141,7 @@ class FtpClient(object):
             fileSize = responseData["size"]
             recievedSize = 0
             f = open(fileName, "wb")
+            step = 0
             md5 = hashlib.md5()
             while fileSize - recievedSize > 0:
                 if fileSize - recievedSize >= 1024:
@@ -147,9 +152,24 @@ class FtpClient(object):
                 f.write(curData)
                 recievedSize += len(curData)
                 md5.update(curData)
+                if int(recievedSize / fileSize * 100 / 5) > step:
+                    print("█", end="", flush=True)
+                    step += 1
             f.close()
-            self.client.send(md5.hexdigest().encode())
+            self.__putMsg(md5.hexdigest())
             self.__getResponse()
+
+    def __putMsg(self, msg):
+        """
+        发送命令
+        :return:
+        """
+        if type(msg) == dict:
+            self.client.send(json.dumps(msg).encode())
+        elif type(msg) == str:
+            self.client.send(msg.encode())
+        else:
+            raise Exception("Invalid message format.")
 
     def __getResponse(self):
         """

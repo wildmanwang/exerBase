@@ -8,7 +8,7 @@ import json
 import hashlib
 import os
 
-class ftpServer(socketserver.BaseRequestHandler):
+class FtpServer(socketserver.BaseRequestHandler):
 
     ResponseDict = {
         100:"命令解析成功",
@@ -30,19 +30,17 @@ class ftpServer(socketserver.BaseRequestHandler):
         """
         while True:
             try:
-                self.data = self.request.recv(1024).strip()
-                self.data = json.loads(self.data.decode())
-                self.action = self.data["action"]
-                if hasattr(self, "srv_{action}".format(action=self.action)):
-                    func = getattr(self, "srv_{action}".format(action=self.action))
+                data = self.__getMsg("dict")
+                if hasattr(self, "srv_{action}".format(action=data["action"])):
+                    func = getattr(self, "srv_{action}".format(action=data["action"]))
                     self.__putInter(100)
-                    func(self.data)
+                    func(data)
                 else:
                     self.__putInter(200)
                     continue
             except Exception as e:
                 print(e)
-                continue
+                return
 
     def srv_pwd(self, args):
         pass
@@ -75,7 +73,7 @@ class ftpServer(socketserver.BaseRequestHandler):
             md5.update(curData)
         f.close()
         self.__putInter(101)
-        codeTrans = self.request.recv(1024).strip().decode()
+        codeTrans = self.__getMsg()
         codeCompu = md5.hexdigest()
         if codeTrans == codeCompu:
             self.__putInter(102)
@@ -89,8 +87,7 @@ class ftpServer(socketserver.BaseRequestHandler):
         :param args:
         :return:
         """
-        responseData = self.request.recv(1024).strip()
-        responseData = responseData.decode()
+        responseData = self.__getMsg()
         if responseData != "OK":
             self.__putInter(209)
             return
@@ -108,29 +105,35 @@ class ftpServer(socketserver.BaseRequestHandler):
             md5.update(line)
         f.close()
         codeCompu = md5.hexdigest()
-        codeTrans = self.request.recv(1024).strip().decode()
+        codeTrans = self.__getMsg()
         if codeCompu == codeTrans:
             self.__putInter(102)
         else:
             self.__putInter(204)
 
-    def __getInter(self):
+    def __getMsg(self, type="str", size=1024):
         """
-        获取交互信息
+        接收信息
         :return:
         """
-        pass
+        if type != "dict" and type != "str":
+            raise Exception("Invalid message format.")
+        data = self.request.recv(size).strip()
+        data = data.decode()
+        if type == "dict":
+            data = json.loads(data)
+        return data
 
     def __putInter(self, code, **kwargs):
         """
         发送交互信息
         :return:
         """
-        data = {"code":code, "info":ftpServer.ResponseDict[code]}
+        data = {"code":code, "info":FtpServer.ResponseDict[code]}
         data.update(kwargs)
         self.request.send(json.dumps(data).encode())
 
 if __name__ == "__main__":
     HOST, PORT = "localhost", 9999
-    server = socketserver.ThreadingTCPServer((HOST, PORT), ftpServer)
+    server = socketserver.ThreadingTCPServer((HOST, PORT), FtpServer)
     server.serve_forever()
