@@ -6,7 +6,12 @@ __author__ = "Cliff.wang"
 import socketserver
 import json
 import hashlib
-import os
+import sys, os
+
+pathRoot = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+pathConf = os.path.join(pathRoot, "conf")
+sys.path.append(pathConf)
+import config
 
 class FtpServer(socketserver.BaseRequestHandler):
 
@@ -15,13 +20,19 @@ class FtpServer(socketserver.BaseRequestHandler):
         101:"文件接收成功",
         102:"文件校验成功",
         103:"开始发送数据",
+        199:"操作成功",
         200:"命令解析失败",
         201:"个人空间不足",
         202:"权限不足",
         203:"指定文件不存在",
         204:"文件校验失败",
-        209:"用户取消操作"
+        209:"用户取消操作",
+        299:"操作失败"
     }
+
+    def __init__(self):
+        super().__init__()
+        userManager = UserManager(pathConf)
 
     def handle(self):
         """
@@ -41,6 +52,20 @@ class FtpServer(socketserver.BaseRequestHandler):
             except Exception as e:
                 print(e)
                 return
+
+    def srv_login(self, args):
+        """
+        登录
+        :param args:
+        :return:
+        """
+        code = args["code"]
+        password = args["password"]
+        result, info = self.userManager.userLogin(code, password)
+        if result:
+            self.__putInter(199)
+        else:
+            self.__putInter(299)
 
     def srv_pwd(self, args):
         pass

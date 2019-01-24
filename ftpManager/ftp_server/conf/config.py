@@ -4,7 +4,6 @@
 __author__ = "Cliff.wang"
 import os
 import configparser
-import hashlib
 
 class User(object):
 
@@ -39,7 +38,6 @@ class UserManager(object):
         name = name.strip()
         if not len(name) > 0:
             return False, "用户名{name}无效".format(name=name)
-        password = self.__password_get(password)
 
         # 创建用户空间
         path = "{root}\\{code}".format(root=self.rootPath, code=code)
@@ -54,16 +52,22 @@ class UserManager(object):
         self.config.set(code, "storageSize", self.initSize)
         self.config.write(open(self.configfile, "w", encoding="utf-8"))
 
-    def password_put(self, oldpw, newpw):
-        pass
-
-    def __password_get(self, password):
-        password = password.strip()
-        if password == "":
-            password = "135246"
-        md5 = hashlib.md5()
-        md5.update(password.encode("utf-8"))
-        return md5.hexdigest()
+    def userLogin(self, code, password):
+        """
+        用户登录
+        :param code:
+        :param password:
+        :return:
+        """
+        code = code.strip()
+        try:
+            data = self.config.get(code, "password")
+            if data == password:
+                return True, "登录成功"
+            else:
+                return False, "密码错误"
+        except Exception as e:
+            return False, "用户不存在"
 
 if __name__ == "__main__":
     path = os.path.abspath(os.path.dirname(__file__))
