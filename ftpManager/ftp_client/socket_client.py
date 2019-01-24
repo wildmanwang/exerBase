@@ -7,6 +7,21 @@ import socket
 import os
 import json
 import hashlib
+import functools
+
+def authenticate(func):
+    """
+    身份验证
+    :return:
+    """
+    @functools.wraps(func)
+    def wrapper(self, *args, **kwargs):
+        code = input("请输入登录代码>>")
+        password = input("请输入登录密码>>")
+        strCmd = "login {code} {password}".format(code=code, password=password)
+        if self.login(strCmd):
+            func(strCmd, *args, **kwargs)
+    return wrapper
 
 class FtpClient(object):
 
@@ -15,7 +30,7 @@ class FtpClient(object):
         self.port = 9999
         self.code = ""
         self.name = ""
-        self.path = ""
+        self.path = []
         self.client = socket.socket()
 
     def connect(self, host, port):
@@ -26,9 +41,6 @@ class FtpClient(object):
         客户端交互
         :return:
         """
-        if not self.login():
-            return
-
         self.connect(self.host, self.port)
 
         while True:
@@ -112,12 +124,17 @@ class FtpClient(object):
         }
         self.__putMsg(cmdInfo)
         responseData = self.__getResponse()
-        if responseData["code"] == 199:
-            self.code = cmdList[1]
-            self.name = responseData["name"]
-            self.path = "home/{code}".format(code=self.code)
-            print("{name}，欢迎你".format(name=self.name))
-            return True
+        if responseData["code"] == 100:
+            self.__putMsg("OK")
+            responseData = self.__getResponse()
+            if responseData["code"] == 199:
+                self.code = cmdList[1]
+                self.name = responseData["name"]
+                self.path.append(self.code)
+                print("{name}，欢迎你".format(name=self.name))
+                return True
+            else:
+                return False
         else:
             return False
 
@@ -130,38 +147,23 @@ class FtpClient(object):
             print("{name}，再来哦")
             self.code = ""
             self.name = ""
-            self.path = ""
+            self.path = []
         else:
             print("路人，请登录")
 
-    def authenticate(self):
-        """
-        身份验证
-        :return:
-        """
-        def out_fun(func):
-            def wrapper(*args, **kwargs):
-                code = input("请输入代码>>")
-                password = input("请输入密码>>")
-                strCmd = "login {code} {password}".format(code=code, password=password)
-                if self.login(strCmd):
-                    func(*args, **kwargs)
-            return wrapper
-        return out_fun
-
-    @authenticate()
+    @authenticate
     def cmd_pwd(self, strCmd):
         pass
 
-    @authenticate()
+    @authenticate
     def cmd_cd(self, strCmd):
         pass
 
-    @authenticate()
+    @authenticate
     def cmd_dir(self, strCmd):
         pass
 
-    @authenticate()
+    @authenticate
     def cmd_put(self, strCmd):
         """
         上传文件
@@ -178,7 +180,8 @@ class FtpClient(object):
             cmdInfo = {
                 "action":"put",
                 "fileName":cmdList[2] if len(cmdList) >= 3 else cmdList[1],
-                "fileSize":fileSize
+                "fileSize":fileSize,
+                "path":self.path
             }
             self.__putMsg(cmdInfo)
             responseData = self.__getResponse()
@@ -195,7 +198,6 @@ class FtpClient(object):
                         print("█", end="", flush=True)
                         step += 1
                 f.close()
-                print("")
                 responseData = self.__getResponse()
                 if responseData["code"] == 101:
                     self.__putMsg(md5.hexdigest())
@@ -203,7 +205,7 @@ class FtpClient(object):
         else:
             print(cmdList[1], " is not exists.")
 
-    @authenticate()
+    @authenticate
     def cmd_get(self, strCmd):
         """
         下载文件

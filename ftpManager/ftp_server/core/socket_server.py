@@ -30,9 +30,9 @@ class FtpServer(socketserver.BaseRequestHandler):
         299:"操作失败"
     }
 
-    def __init__(self):
-        super().__init__()
-        userManager = UserManager(pathConf)
+    #def __init__(self, request, client_address, server):
+    #    super().__init__(self, request, client_address, server)
+    #    userManager = UserManager(pathConf)
 
     def handle(self):
         """
@@ -59,13 +59,19 @@ class FtpServer(socketserver.BaseRequestHandler):
         :param args:
         :return:
         """
+        responseData = self.__getMsg()
+        if responseData != "OK":
+            self.__putInter(209)
+            return
+
         code = args["code"]
         password = args["password"]
-        result, info = self.userManager.userLogin(code, password)
+        userManager = config.UserManager(os.path.join(pathConf, "user"))
+        result, name, info = userManager.userLogin(code, password)
         if result:
-            self.__putInter(199)
+            self.__putInter(199, name=name, info=info)
         else:
-            self.__putInter(299)
+            self.__putInter(299, info=info)
 
     def srv_pwd(self, args):
         pass
@@ -84,7 +90,15 @@ class FtpServer(socketserver.BaseRequestHandler):
         """
         fileName = args["fileName"]
         fileSize = args["fileSize"]
+        filePath = args["path"]
+        if len(filePath) == 0:
+            self.__putInter(202)
+
         recievedSize = 0
+        tmp = pathRoot
+        for i in filePath:
+            tmp = os.path.join(tmp, i)
+        fileName = os.path.join(tmp, fileName)
         f = open(fileName, "wb")
         md5 = hashlib.md5()
         while fileSize - recievedSize > 0:

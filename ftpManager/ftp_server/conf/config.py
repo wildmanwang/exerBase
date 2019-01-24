@@ -62,14 +62,15 @@ class UserManager(object):
         code = code.strip()
         try:
             data = self.config.get(code, "password")
+            name = self.config.get(code, "name")
             if data == password:
-                return True, "登录成功"
+                return True, name, "登录成功"
             else:
-                return False, "密码错误"
+                return False, "", "密码错误"
         except Exception as e:
             return False, "用户不存在"
 
 if __name__ == "__main__":
     path = os.path.abspath(os.path.dirname(__file__))
     manager = UserManager(path + "\\user")
-    manager.userReg("Cliff", "老王", "123456")
+    print(manager.rootPath)
