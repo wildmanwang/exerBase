@@ -68,7 +68,27 @@ class UserManager(object):
             else:
                 return False, "", "密码错误"
         except Exception as e:
-            return False, "用户不存在"
+            return False, code, "用户不存在"
+
+    def password(self, code, pwold, pwnew):
+        """
+        修改密码
+        :param code:
+        :param pwold:
+        :param pwnew:
+        :return:
+        """
+        try:
+            data = self.config.get(code, "password")
+            name = self.config.get(code, "name")
+            if data == pwold:
+                self.config.set(code, "password", pwnew)
+                self.config.write(open(self.configfile, "w", encoding="utf-8"))
+                return True, name, "修改密码成功"
+            else:
+                return False, name, "原密码输入错误"
+        except Exception as e:
+            return False, code, "用户不存在"
 
 if __name__ == "__main__":
     path = os.path.abspath(os.path.dirname(__file__))

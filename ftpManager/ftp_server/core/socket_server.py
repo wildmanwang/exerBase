@@ -73,8 +73,26 @@ class FtpServer(socketserver.BaseRequestHandler):
         else:
             self.__putInter(299, info=info)
 
-    def srv_pwd(self, args):
-        pass
+    def srv_password(self, args):
+        """
+        响应修改密码
+        :param args:{"action":"password", "pwold":pwold, "pwnew":pwnew}
+        :return:
+        """
+        responseData = self.__getMsg()
+        if responseData != "OK":
+            self.__putInter(209)
+            return
+
+        code = args["code"]
+        pwold = args["pwold"]
+        pwnew = args["pwnew"]
+        userManager = config.UserManager(os.path.join(pathConf, "user"))
+        result, name, info = userManager.password(code, pwold, pwnew)
+        if result:
+            self.__putInter(199, name=name, info=info)
+        else:
+            self.__putInter(299, info=info)
 
     def srv_cd(self, args):
         pass
@@ -95,7 +113,7 @@ class FtpServer(socketserver.BaseRequestHandler):
             self.__putInter(202)
 
         recievedSize = 0
-        tmp = pathRoot
+        tmp = os.path.join(pathRoot, "data")
         for i in filePath:
             tmp = os.path.join(tmp, i)
         fileName = os.path.join(tmp, fileName)
@@ -132,6 +150,11 @@ class FtpServer(socketserver.BaseRequestHandler):
             return
 
         fileName = args["fileName"]
+        filePath = args["path"]
+        tmp = os.path.join(pathRoot, "data")
+        for i in filePath:
+            tmp = os.path.join(tmp, i)
+        fileName = os.path.join(tmp, fileName)
         if not os.path.isfile(fileName):
             self.__putInter(203)
             return

@@ -16,11 +16,13 @@ def authenticate(func):
     """
     @functools.wraps(func)
     def wrapper(self, *args, **kwargs):
-        code = input("请输入登录代码>>")
-        password = input("请输入登录密码>>")
-        strCmd = "login {code} {password}".format(code=code, password=password)
-        if self.login(strCmd):
-            func(strCmd, *args, **kwargs)
+        if len(self.code) == 0:
+            code = input("请输入登录代码>>")
+            password = input("请输入登录密码>>")
+            strCmd = "login {code} {password}".format(code=code, password=password)
+            self.cmd_login(strCmd)
+        if len(self.code) > 0:
+            func(self, args[0])
     return wrapper
 
 class FtpClient(object):
@@ -53,9 +55,9 @@ class FtpClient(object):
                 func = getattr(self, "cmd_{cmd}".format(cmd=strCmd.split()[0]))
                 func(strCmd)
             else:
-                self.help()
+                self.cmd_help(strCmd)
 
-    def help(self):
+    def cmd_help(self, strCmd):
         """
         显示命令帮助
         :return:
@@ -67,15 +69,19 @@ class FtpClient(object):
             "get filename newfilename":"下载文件",
             "exit":"退出"
         }
-        strHelp = "没有找到对应的指令。帮助如下："
+        if strCmd == "help":
+            strHelp = ""
+        else:
+            strHelp = "没有找到对应的指令。\n"
+        strHelp += "FTP系统命令帮助如下："
         for item in listHelp:
             strHelp += "\n{key}\t{value}".format(key=item, value=listHelp[item])
         print(strHelp)
 
-    def reg(self, strCmd):
+    def cmd_reg(self, strCmd):
         """
         注册
-        :param strCmd:reg <code> <name> <password>
+        :param strCmd:reg code name password
         :return:
         """
         cmdList = strCmd.split()
@@ -99,7 +105,7 @@ class FtpClient(object):
         self.__putMsg(cmdInfo)
         self.__getResponse()
 
-    def login(self, strCmd):
+    def cmd_login(self, strCmd):
         """
         登录
         :param strCmd:login <code> <password>
@@ -130,7 +136,7 @@ class FtpClient(object):
             if responseData["code"] == 199:
                 self.code = cmdList[1]
                 self.name = responseData["name"]
-                self.path.append(self.code)
+                self.path = [self.code]
                 print("{name}，欢迎你".format(name=self.name))
                 return True
             else:
@@ -138,36 +144,75 @@ class FtpClient(object):
         else:
             return False
 
-    def logout(self):
+    def cmd_logout(self, strCmd):
         """
         登出
+        :param strCmd:logout
         :return:
         """
         if len(self.code) > 0:
-            print("{name}，再来哦")
+            print("{name}，再来哦".format(name=self.name))
             self.code = ""
             self.name = ""
             self.path = []
         else:
-            print("路人，请登录")
+            print("路人，您还没登录")
 
     @authenticate
-    def cmd_pwd(self, strCmd):
-        pass
+    def cmd_password(self, strCmd):
+        """
+        修改密码
+        :param strCmd:password pwold pwnew
+        :return:
+        """
+        cmdList = strCmd.split()
+        if len(cmdList) < 3:
+            print("请输入原密码（必须）、新密码（必须）")
+            return
+
+        pwold = cmdList[1]
+        pwnew = cmdList[2]
+        md5 = hashlib.md5()
+        md5.update(pwold.encode("utf-8"))
+        pwold = md5.hexdigest()
+        md5 = hashlib.md5()
+        md5.update(pwnew.encode("utf-8"))
+        pwnew = md5.hexdigest()
+        cmdInfo = {
+            "action":"password",
+            "code":self.code,
+            "pwold":pwold,
+            "pwnew":pwnew
+        }
+        self.__putMsg(cmdInfo)
+        responseData = self.__getResponse()
+        if responseData["code"] == 100:
+            self.__putMsg("OK")
+            responseData = self.__getResponse()
 
     @authenticate
     def cmd_cd(self, strCmd):
+        """
+        切换目录
+        :param strCmd:cd path
+        :return:
+        """
         pass
 
     @authenticate
     def cmd_dir(self, strCmd):
+        """
+        显示当前目录文件
+        :param strCmd:dir
+        :return:
+        """
         pass
 
     @authenticate
     def cmd_put(self, strCmd):
         """
         上传文件
-        :param strCmd:
+        :param strCmd:put filename newfilename
         :return:
         """
         cmdList = strCmd.split()
@@ -194,22 +239,23 @@ class FtpClient(object):
                     self.client.send(line)
                     sendedSize += len(line)
                     md5.update(line)
-                    if int(sendedSize / fileSize * 100 / 5) > step:
+                    while int(sendedSize / fileSize * 100 / 5) > step:
                         print("█", end="", flush=True)
                         step += 1
                 f.close()
+                print("", flush=True)
                 responseData = self.__getResponse()
                 if responseData["code"] == 101:
                     self.__putMsg(md5.hexdigest())
                     responseData = self.__getResponse()
         else:
-            print(cmdList[1], " is not exists.")
+            print(cmdList[1], "is not exists.")
 
     @authenticate
     def cmd_get(self, strCmd):
         """
         下载文件
-        :param strCmd:
+        :param strCmd:get filename newfilename
         :return:
         """
         cmdList = strCmd.split()
@@ -219,7 +265,8 @@ class FtpClient(object):
 
         cmdInfo = {
             "action":"get",
-            "fileName":cmdList[1]
+            "fileName":cmdList[1],
+            "path":self.path
         }
         self.__putMsg(cmdInfo)
         responseData = self.__getResponse()
@@ -244,11 +291,11 @@ class FtpClient(object):
                 f.write(curData)
                 recievedSize += len(curData)
                 md5.update(curData)
-                if int(recievedSize / fileSize * 100 / 5) > step:
+                while int(recievedSize / fileSize * 100 / 5) > step:
                     print("█", end="", flush=True)
                     step += 1
             f.close()
-            print("")
+            print("", flush=True)
             self.__putMsg(md5.hexdigest())
             self.__getResponse()
 
