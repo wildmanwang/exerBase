@@ -53,9 +53,30 @@ class FtpServer(socketserver.BaseRequestHandler):
                 print(e)
                 return
 
+    def srv_reg(self, args):
+        """
+        响应注册
+        :param args:
+        :return:
+        """
+        responseData = self.__getMsg()
+        if responseData != "OK":
+            self.__putInter(209)
+            return
+
+        code = args("code")
+        name = args("name")
+        password = args("password")
+        userManager = config.UserManager(os.path.join(pathConf, "user"))
+        result, info = userManager.userReg(code, name, password)
+        if result:
+            self.__putInter(199, info=info)
+        else:
+            self.__putInter(299, info=info)
+
     def srv_login(self, args):
         """
-        登录
+        响应登录
         :param args:
         :return:
         """
@@ -94,6 +115,54 @@ class FtpServer(socketserver.BaseRequestHandler):
         else:
             self.__putInter(299, info=info)
 
+    def srv_mkdir(self, args):
+        """
+        响应创建目录
+        :param args:
+        :return:
+        """
+        responseData = self.__getMsg()
+        if responseData != "OK":
+            self.__putInter(209)
+            return
+
+        dirname = args["dirname"]
+        filepath = args["path"]
+        if len(filepath) == 0:
+            self.__putInter(202, info="当前目录无效")
+            return
+
+        userManager = config.UserManager(os.path.join(pathConf, "user"))
+        result, info = userManager.mkDir(filepath, dirname)
+        if result:
+            self.__putInter(199, info=info)
+        else:
+            self.__putInter(299, info=info)
+
+    def srv_deldir(self, args):
+        """
+        响应删除目录
+        :param args:
+        :return:
+        """
+        responseData = self.__getMsg()
+        if responseData != "OK":
+            self.__putInter(209)
+            return
+
+        dirname = args["dirname"]
+        filepath = args["path"]
+        if len(filepath) == 0:
+            self.__putInter(202, info="当前目录无效")
+            return
+
+        userManager = config.UserManager(os.path.join(pathConf, "user"))
+        result, info = userManager.delDir(filepath, dirname)
+        if result:
+            self.__putInter(199, info=info)
+        else:
+            self.__putInter(299, info=info)
+
     def srv_cd(self, args):
         pass
 
@@ -111,6 +180,7 @@ class FtpServer(socketserver.BaseRequestHandler):
         filePath = args["path"]
         if len(filePath) == 0:
             self.__putInter(202)
+            return
 
         recievedSize = 0
         tmp = os.path.join(pathRoot, "data")

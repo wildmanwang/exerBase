@@ -191,13 +191,153 @@ class FtpClient(object):
             responseData = self.__getResponse()
 
     @authenticate
+    def cmd_mkdir(self, strCmd):
+        """
+        创建目录
+        :param strCmd:mkdir dirname
+        :return:
+        """
+        cmdList = strCmd.split()
+        if len(cmdList) < 2:
+            print("请输入要创建的目录名")
+            return
+
+        dirname = cmdList[1]
+        cmdInfo = {
+            "action":"mkdir",
+            "path":self.path,
+            "dirname":dirname
+        }
+        self.__putMsg(cmdInfo)
+        responseData = self.__getResponse()
+        if responseData["code"] == 100:
+            self.__putMsg("OK")
+            responseData = self.__getResponse()
+
+    @authenticate
+    def cmd_deldir(self, strCmd):
+        """
+        删除目录
+        :param strCmd:deldir dirname
+        :return:
+        """
+        cmdList = strCmd.split()
+        if len(cmdList) < 2:
+            print("请输入要删除的目录名")
+            return
+
+        dirname = cmdList[1]
+        cmdInfo = {
+            "action":"deldir",
+            "path":self.path,
+            "dirname":dirname
+        }
+        self.__putMsg(cmdInfo)
+        responseData = self.__getResponse()
+        if responseData["code"] == 100:
+            self.__putMsg("OK")
+            responseData = self.__getResponse()
+
+    @authenticate
+    def cmd_renamedir(self, strCmd):
+        """
+        目录改名
+        :param strCmd:renamedir oldname newname
+        :return:
+        """
+        cmdList = strCmd.split()
+        if len(cmdList) < 3:
+            print("请输入原目录名（必须）、新目录名（必须）")
+            return
+
+        oldname = cmdList[1]
+        newname = cmdList[2]
+        cmdInfo = {
+            "action":"renamedir",
+            "path":self.path,
+            "oldname":oldname,
+            "newname":newname
+        }
+        self.__putMsg(cmdInfo)
+        responseData = self.__getResponse()
+        if responseData["code"] == 100:
+            self.__putMsg("OK")
+            responseData = self.__getResponse()
+
+    @authenticate
+    def cmd_delfile(self, strCmd):
+        """
+        删除文件
+        :param strCmd:delfile filename
+        :return:
+        """
+        cmdList = strCmd.split()
+        if len(cmdList) < 2:
+            print("请输入要删除的文件名")
+            return
+
+        filename = cmdList[1]
+        cmdInfo = {
+            "action":"delfile",
+            "path":self.path,
+            "dirname":filename
+        }
+        self.__putMsg(cmdInfo)
+        responseData = self.__getResponse()
+        if responseData["code"] == 100:
+            self.__putMsg("OK")
+            responseData = self.__getResponse()
+
+    @authenticate
+    def cmd_renamefile(self, strCmd):
+        """
+        文件改名
+        :param strCmd:renamefile oldname newname
+        :return:
+        """
+        cmdList = strCmd.split()
+        if len(cmdList) < 3:
+            print("请输入原文件名（必须）、新文件名（必须）")
+            return
+
+        oldname = cmdList[1]
+        newname = cmdList[2]
+        cmdInfo = {
+            "action":"renamefile",
+            "path":self.path,
+            "oldname":oldname,
+            "newname":newname
+        }
+        self.__putMsg(cmdInfo)
+        responseData = self.__getResponse()
+        if responseData["code"] == 100:
+            self.__putMsg("OK")
+            responseData = self.__getResponse()
+
+    @authenticate
     def cmd_cd(self, strCmd):
         """
         切换目录
         :param strCmd:cd path
         :return:
         """
-        pass
+        cmdList = strCmd.split()
+        if len(cmdList) < 2:
+            print("请指定要切换的目录")
+            return
+
+        pathname = cmdList[1]
+        cmdInfo = {
+            "action":"cd",
+            "path":self.path,
+            "pathname":pathname
+        }
+        self.__putMsg(cmdInfo)
+        responseData = self.__getResponse()
+        if responseData["code"] == 100:
+            self.__putMsg("OK")
+            responseData = self.__getResponse()
+            self.path = responseData["path"]
 
     @authenticate
     def cmd_dir(self, strCmd):
@@ -206,7 +346,19 @@ class FtpClient(object):
         :param strCmd:dir
         :return:
         """
-        pass
+        cmdInfo = {
+            "action":"dir",
+            "path":self.path
+        }
+        self.__putMsg(cmdInfo)
+        responseData = self.__getResponse()
+        if responseData["code"] == 100:
+            self.__putMsg("OK")
+            responseData = self.__getResponse()
+            for i in responseData["paths"]:
+                print("{path}\t<path>".format(path=i))
+            for i in responseData["files"]:
+                print("{file}\t<file>".format(file=i))
 
     @authenticate
     def cmd_put(self, strCmd):

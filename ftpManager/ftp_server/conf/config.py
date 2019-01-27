@@ -51,6 +51,7 @@ class UserManager(object):
         self.config.set(code, "password", password)
         self.config.set(code, "storageSize", self.initSize)
         self.config.write(open(self.configfile, "w", encoding="utf-8"))
+        return True, "用户[{code}]{name}注册成功".format(code=code, name=name)
 
     def userLogin(self, code, password):
         """
@@ -89,6 +90,49 @@ class UserManager(object):
                 return False, name, "原密码输入错误"
         except Exception as e:
             return False, code, "用户不存在"
+
+    def mkDir(self, path, name):
+        """
+        创建目录
+        :param path:
+        :return:
+        """
+        # 获取所在目录
+        curPath = self.rootPath
+        for i in path:
+            curPath = os.path.join(curPath, i)
+        curPath = os.path.join(curPath, name)
+        # 判断目录是否存在
+        if not os.path.exists(curPath):
+            os.mkdir(curPath)
+            return True, "目录创建成功"
+        else:
+            return False, "目录已存在"
+
+    def delDir(self, path, name):
+        """
+        删除目录
+        :param path:
+        :param name:
+        :return:
+        """
+        # 获取所在目录
+        curPath = self.rootPath
+        for i in path:
+            curPath = os.path.join(curPath, i)
+        curPath = os.path.join(curPath, name)
+        # 判断目录是否存在
+        if os.path.exists(curPath):
+            files = os.listdir(curPath)
+            if len(files) > 0:
+                return False, "目录非空，不能删除"
+            try:
+                os.rmdir(curPath)
+            except Exception as e:
+                return False, "删除目录失败"
+            return True, "目录删除成功"
+        else:
+            return False, "目录不存在"
 
 if __name__ == "__main__":
     path = os.path.abspath(os.path.dirname(__file__))
