@@ -163,11 +163,126 @@ class FtpServer(socketserver.BaseRequestHandler):
         else:
             self.__putInter(299, info=info)
 
+    def srv_renamedir(self, args):
+        """
+        响应重命名目录
+        :param args:
+        :return:
+        """
+        responseData = self.__getMsg()
+        if responseData != "OK":
+            self.__putInter(209)
+            return
+
+        filepath = args["path"]
+        oldname = args["oldname"]
+        newname = args["newname"]
+        if len(filepath) == 0:
+            self.__putInter(202, info="当前目录无效")
+            return
+
+        userManager = config.UserManager(os.path.join(pathConf, "user"))
+        result, info = userManager.renameDir(filepath, oldname, newname)
+        if result:
+            self.__putInter(199, info=info)
+        else:
+            self.__putInter(299, info=info)
+
+    def srv_delfile(self, args):
+        """
+        响应删除文件
+        :param args:
+        :return:
+        """
+        responseData = self.__getMsg()
+        if responseData != "OK":
+            self.__putInter(209)
+            return
+
+        filepath = args["path"]
+        filename = args["filename"]
+        if len(filepath) == 0:
+            self.__putInter(202, info="当前目录无效")
+            return
+
+        userManager = config.UserManager(os.path.join(pathConf, "user"))
+        result, info = userManager.delFile(filepath, filename)
+        if result:
+            self.__putInter(199, info=info)
+        else:
+            self.__putInter(299, info=info)
+
+    def srv_renamefile(self, args):
+        """
+        响应删除文件
+        :param args:
+        :return:
+        """
+        responseData = self.__getMsg()
+        if responseData != "OK":
+            self.__putInter(209)
+            return
+
+        filepath = args["path"]
+        oldname = args["oldname"]
+        newname = args["newname"]
+        if len(filepath) == 0:
+            self.__putInter(202, info="当前目录无效")
+            return
+
+        userManager = config.UserManager(os.path.join(pathConf, "user"))
+        result, info = userManager.renameFile(filepath, oldname, newname)
+        if result:
+            self.__putInter(199, info=info)
+        else:
+            self.__putInter(299, info=info)
+
     def srv_cd(self, args):
-        pass
+        """
+        切换目录
+        :param args:
+        :return:
+        """
+        responseData = self.__getMsg()
+        if responseData != "OK":
+            self.__putInter(209)
+            return
+
+        filepath = args["path"]
+        pathname = args["pathname"]
+        if len(filepath) == 0:
+            self.__putInter(202, info="当前目录无效")
+            return
+
+        userManager = config.UserManager(os.path.join(pathConf, "user"))
+        result, newpath, info = userManager.cd(filepath, pathname)
+        if result:
+            self.__putInter(199, info=info, newpath=newpath)
+        else:
+            self.__putInter(299, info=info)
 
     def srv_dir(self, args):
-        pass
+        """
+        显示文件列表
+        :param args:
+        :return:
+        """
+        responseData = self.__getMsg()
+        if responseData != "OK":
+            self.__putInter(209)
+            return
+
+        filepath = args["path"]
+        if len(filepath) == 0:
+            self.__putInter(202, info="当前目录无效")
+            return
+
+        userManager = config.UserManager(os.path.join(pathConf, "user"))
+        result, paths, files, info = userManager.dir(filepath)
+        if result:
+            self.__putInter(199, info=info, paths=paths, files=files)
+        else:
+            self.__putInter(299, info=info)
 
     def srv_put(self, args):
         """

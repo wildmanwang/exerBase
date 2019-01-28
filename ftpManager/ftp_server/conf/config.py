@@ -103,11 +103,13 @@ class UserManager(object):
             curPath = os.path.join(curPath, i)
         curPath = os.path.join(curPath, name)
         # 判断目录是否存在
-        if not os.path.exists(curPath):
-            os.mkdir(curPath)
-            return True, "目录创建成功"
-        else:
+        if os.path.exists(curPath):
             return False, "目录已存在"
+        try:
+            os.mkdir(curPath)
+        except Exception as e:
+            return False, "创建目录失败"
+        return True, "目录创建成功"
 
     def delDir(self, path, name):
         """
@@ -122,17 +124,136 @@ class UserManager(object):
             curPath = os.path.join(curPath, i)
         curPath = os.path.join(curPath, name)
         # 判断目录是否存在
-        if os.path.exists(curPath):
-            files = os.listdir(curPath)
-            if len(files) > 0:
-                return False, "目录非空，不能删除"
-            try:
-                os.rmdir(curPath)
-            except Exception as e:
-                return False, "删除目录失败"
-            return True, "目录删除成功"
-        else:
+        if not os.path.exists(curPath):
             return False, "目录不存在"
+        files = os.listdir(curPath)
+        if len(files) > 0:
+            return False, "目录非空，不能删除"
+        try:
+            os.rmdir(curPath)
+        except Exception as e:
+            return False, "删除目录失败"
+        return True, "目录删除成功"
+
+    def renameDir(self, path, oldname, newname):
+        """
+        重命名目录
+        :param path:
+        :param oldname:
+        :param newname:
+        :return:
+        """
+        # 获取所在目录
+        curPath = self.rootPath
+        for i in path:
+            curPath = os.path.join(curPath, i)
+        oldPath = os.path.join(curPath, oldname)
+        if not os.path.exists(oldPath):
+            return False, "原目录不存在"
+        newPath = os.path.join(curPath, newname)
+        if os.path.exists(newPath) and os.path.isdir(newPath):
+            return False, "已存在同名目录"
+        try:
+            os.rename(oldPath, newPath)
+        except Exception as e:
+            return False, "重命名目录失败"
+        return True, "重命名目录成功"
+
+    def delFile(self, path, filename):
+        """
+        删除文件
+        :param path:
+        :param filename:
+        :return:
+        """
+        # 获取所在目录
+        curPath = self.rootPath
+        for i in path:
+            curPath = os.path.join(curPath, i)
+        curPath = os.path.join(curPath, filename)
+        # 判断文件是否存在
+        if not os.path.exists(curPath):
+            return False, "文件不存在"
+        if not os.path.isfile(curPath):
+            return False, "对象为非文件"
+        try:
+            os.remove(curPath)
+        except Exception as e:
+            return False, "删除文件失败"
+        return True, "文件删除成功"
+
+    def renameFile(self, path, oldname, newname):
+        """
+        重命名文件
+        :param path:
+        :param oldname:
+        :param newname:
+        :return:
+        """
+        # 获取所在目录
+        curPath = self.rootPath
+        for i in path:
+            curPath = os.path.join(curPath, i)
+        oldPath = os.path.join(curPath, oldname)
+        if not os.path.exists(oldPath):
+            return False, "原文件不存在"
+        if not os.path.isfile(oldPath):
+            return False, "对象为非文件"
+        newPath = os.path.join(curPath, newname)
+        if os.path.exists(newPath) and os.path.isfile(newPath):
+            return False, "已存在同名文件"
+        try:
+            os.rename(oldPath, newPath)
+        except Exception as e:
+            return False, "重命名文件失败"
+        return True, "重命名文件成功"
+
+    def cd(self, path, pathname):
+        """
+        切换目录
+        :param path:
+        :param pathname:
+        :return:
+        """
+        # 获取所在目录
+        curPath = self.rootPath
+        for i in path:
+            curPath = os.path.join(curPath, i)
+
+        newpath = path
+        if pathname == "..":
+            if len(path) < 2:
+                return False, None, "已经是根目录，无权获取上层目录"
+            newpath.pop()
+        else:
+            distpath = os.path.join(curPath, pathname)
+            if not os.path.exists(distpath):
+                return False, None, "目标目录不存在"
+            if not os.path.isdir(distpath):
+                return False, None, "指定对象非目录"
+            newpath.append(pathname)
+        return True, newpath, "切换目录成功"
+
+    def dir(self, path):
+        """
+        显示文件列表
+        :param path:
+        :return:
+        """
+        # 获取所在目录
+        curPath = self.rootPath
+        for i in path:
+            curPath = os.path.join(curPath, i)
+
+        list = os.listdir(curPath)
+        pathlist = []
+        filelist = []
+        for i in list:
+            if os.path.isdir(i):
+                pathlist.append(i)
+            else:
+                filelist.append(i)
+        return True, pathlist, filelist, "获取列表成功"
 
 if __name__ == "__main__":
     path = os.path.abspath(os.path.dirname(__file__))

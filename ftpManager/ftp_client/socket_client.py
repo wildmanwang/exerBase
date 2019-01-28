@@ -63,11 +63,20 @@ class FtpClient(object):
         :return:
         """
         listHelp = {
-            "reg"
-            "cd pathname":"切换目录",
-            "put filename newfilename":"上传文件",
-            "get filename newfilename":"下载文件",
-            "exit":"退出"
+            "reg":          "注册用户strCmd:reg code name password",
+            "login":        "登录strCmd:login code password",
+            "logout":       "登出strCmd:logout",
+            "password":     "修改密码strCmd:password pwold pwnew",
+            "mkdir":        "创建目录strCmd:mkdir dirname",
+            "deldir":       "删除目录strCmd:deldir dirname",
+            "renamedir":    "重命名目录strCmd:renamedir oldname newname",
+            "delfile":      "删除文件strCmd:delfile filename",
+            "renamefile":   "重命名文件strCmd:renamefile oldname newname",
+            "cd":           "切换目录strCmd:cd path",
+            "dir":          "打印文件列表strCmd:dir",
+            "put":          "上传文件strCmd:put filename newfilename",
+            "get":          "下载文件strCmd:get filename newfilename",
+            "exit":         "退出"
         }
         if strCmd == "help":
             strHelp = ""
@@ -75,7 +84,7 @@ class FtpClient(object):
             strHelp = "没有找到对应的指令。\n"
         strHelp += "FTP系统命令帮助如下："
         for item in listHelp:
-            strHelp += "\n{key}\t{value}".format(key=item, value=listHelp[item])
+            strHelp += "\n{key}:\t{value}".format(key=item.rjust(15, " "), value=listHelp[item])
         print(strHelp)
 
     def cmd_reg(self, strCmd):
@@ -108,7 +117,7 @@ class FtpClient(object):
     def cmd_login(self, strCmd):
         """
         登录
-        :param strCmd:login <code> <password>
+        :param strCmd:login code password
         :return:
         """
         cmdList = strCmd.split()
@@ -280,7 +289,7 @@ class FtpClient(object):
         cmdInfo = {
             "action":"delfile",
             "path":self.path,
-            "dirname":filename
+            "filename":filename
         }
         self.__putMsg(cmdInfo)
         responseData = self.__getResponse()
@@ -337,7 +346,8 @@ class FtpClient(object):
         if responseData["code"] == 100:
             self.__putMsg("OK")
             responseData = self.__getResponse()
-            self.path = responseData["path"]
+            if responseData["code"] == 199:
+                self.path = responseData["newpath"]
 
     @authenticate
     def cmd_dir(self, strCmd):

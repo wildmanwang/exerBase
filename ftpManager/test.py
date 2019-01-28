@@ -2,4 +2,7 @@
 """
 """
 __author__ = "Cliff.wang"
-print(True, "123")
+list = [1,2,3,4]
+list.pop()
+list.append(5)
+print(list)
