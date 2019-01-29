@@ -112,7 +112,10 @@ class FtpClient(object):
             "password":password
         }
         self.__putMsg(cmdInfo)
-        self.__getResponse()
+        responseData = self.__getResponse()
+        if responseData["code"] == 100:
+            self.__putMsg("OK")
+            responseData = self.__getResponse()
 
     def cmd_login(self, strCmd):
         """

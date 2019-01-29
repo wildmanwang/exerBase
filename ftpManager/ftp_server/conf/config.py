@@ -50,6 +50,7 @@ class UserManager(object):
         self.config.set(code, "name", name)
         self.config.set(code, "password", password)
         self.config.set(code, "storageSize", self.initSize)
+        self.config.set(code, "storaged", "0M")
         self.config.write(open(self.configfile, "w", encoding="utf-8"))
         return True, "用户[{code}]{name}注册成功".format(code=code, name=name)
 
@@ -254,6 +255,23 @@ class UserManager(object):
             else:
                 filelist.append(i)
         return True, pathlist, filelist, "获取列表成功"
+
+    def getSize(self, code):
+        """
+        获取用户空间数据
+        :param code:
+        :return:
+        """
+        pass
+
+    def setSize(self, storagesize=-1, storaged=-1):
+        """
+        更新用户空间数据
+        :param storagesize:
+        :param storaged:
+        :return:
+        """
+        pass
 
 if __name__ == "__main__":
     path = os.path.abspath(os.path.dirname(__file__))

@@ -64,9 +64,9 @@ class FtpServer(socketserver.BaseRequestHandler):
             self.__putInter(209)
             return
 
-        code = args("code")
-        name = args("name")
-        password = args("password")
+        code = args["code"]
+        name = args["name"]
+        password = args["password"]
         userManager = config.UserManager(os.path.join(pathConf, "user"))
         result, info = userManager.userReg(code, name, password)
         if result:
