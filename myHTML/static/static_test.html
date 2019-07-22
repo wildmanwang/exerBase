@@ -6,8 +6,21 @@
     <meta name="description" content="adfadf">
     <title>aaa</title>
     <link rel="icon" href="img/淘宝.png">
+    <style>
+        form label{
+            color: blue;
+            display: inline-block;
+            width: 120px;
+            text-align: right;
+            margin-right: 10px;
+        }
+        form div{
+            margin-top: 10px;
+            margin-left: 130px;
+        }
+    </style>
 </head>
-<body>
+<body style="margin: 0">
     <h5>人生得意&nbsp;&nbsp;&nbsp;&nbsp;须尽欢</h5>
     <h6>莫使金樽&nbsp;&nbsp;&nbsp;&nbsp;空对月</h6>
     <p>减肥咖啡三大阿多看看那时的结果，贷款机构是否离开<br/>湖南科技付款回复</p>
@@ -18,11 +31,22 @@
     <div>黄河之水天上来</div>
     <div>东流到海不复还</div>
     <form action="" method="get">
-        <input type="text" name="user" />
-        <input type="password" name="pwd" />
-        <!--以字典格式提交数据{"user":"zhangsan", "pwd":"123"}-->
-        <input type="button" value="按钮" />
-        <input type="submit" value="登录" />
+        <h4 style="margin-left: 0; margin-right: 0; margin-top: 10px; margin-bottom: 10px; height:32px; line-height: 32px; background-color: gainsboro; color: white">User Regist</h4>
+        <label>User:</label><input type="text" name="user" /><br>
+        <label>Password:</label><input type="password" name="pwd" /><br>
+        <label>Receive email:</label><input type="checkbox" anme="rece" checked="checked" /><br>
+        <label>Sex:</label><span>male</span><input type="radio" name="sex" checked="checked" value="1"><span>female</span><input type="radio" name="sex" value="0"><br>
+        <label>Color:</label><input type="color" name="color"><br>
+        <label>Month:</label><input type="month" name="month"><br>
+        <label>Date:</label><input type="date" name="date"><br>
+        <label>Time:</label><input type="time" name="time"><br>
+        <label>Email:</label><input type="email" name="email"><br>
+        <!-- 以字典格式提交数据{"user":"zhangsan", "pwd":"123"}-->
+        <div>
+            <input type="submit" value="登录" />
+            <input type="button" value="退出" /><br>
+            <a href="" target="_blank">忘记密码</a>
+        </div>
     </form>
 </body>
 </html>
