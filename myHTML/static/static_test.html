@@ -27,14 +27,34 @@
             float: left;
             width: 100px;
         }
+        tr{
+            height:24px;
+        }
+        .no{
+            width:80px;
+            background-color:#DDFFDD;
+        }
+        .str{
+            width:120px;
+            background-color:#FFDDDD;
+        }
+        .date{
+            width:100px;
+            background-color:#DDDDFF;
+        }
     </style>
 </head>
 <body style="margin: 0 0 0 0">
-    <ul style="float: left; display: inline-block">
+    <ul>
         <li>第一页</li>
         <li>第二页</li>
         <li>第三页</li>
     </ul>
+    <ol type="i">
+        <li>第一页</li>
+        <li>第二页</li>
+        <li>第三页</li>
+    </ol>
     <h5>人生得意&nbsp;&nbsp;&nbsp;&nbsp;须尽欢</h5>
     <h6>莫使金樽&nbsp;&nbsp;&nbsp;&nbsp;空对月</h6>
     <p>减肥咖啡三大阿多看看那时的结果，贷款机构是否离开<br/>湖南科技付款回复</p>
@@ -60,17 +80,26 @@
     <span>cccc</span>
     <div>黄河之水天上来</div>
     <div>东流到海不复还</div>
+    <img src="img/怀旧.jpg">
     <form action="" method="get">
         <h4 style="margin-left: 0; margin-right: 0; margin-top: 10px; margin-bottom: 10px; height:32px; line-height: 32px; background-color: gainsboro; color: white">User Regist</h4>
-        <label>User:</label><input type="text" name="user" /><br>
-        <label>Password:</label><input type="password" name="pwd" /><br>
-        <label>Receive email:</label><input type="checkbox" anme="rece" checked="checked" /><br>
-        <label>Sex:</label><span>male</span><input type="radio" name="sex" checked="checked" value="1"><span>female</span><input type="radio" name="sex" value="0"><br>
-        <label>Color:</label><input type="color" name="color"><br>
-        <label>Month:</label><input type="month" name="month"><br>
-        <label>Date:</label><input type="date" name="date"><br>
-        <label>Time:</label><input type="time" name="time"><br>
-        <label>Email:</label><input type="email" name="email"><br>
+        <label for="user">User:</label><input type="text" id="user" name="user" /><br>
+        <label for="password">Password:</label><input type="password" id="password" name="pwd" /><br>
+        <label for="rece">Receive email:</label><input type="checkbox" id="rece" anme="rece" checked="checked" /><br>
+        <label for="sex">Sex:</label><span>male</span><input type="radio" id="sex" name="sex" checked="checked" value="1"><span>female</span><input type="radio" name="sex" value="0"><br>
+        <label for="color">Color:</label><input type="color" id="color" name="color"><br>
+        <label for="month">Month:</label><input type="month" id="month" name="month"><br>
+        <label for="date">Date:</label><input type="date" id="date" name="date"><br>
+        <label for="time">Time:</label><input type="time" id="time" name="time"><br>
+        <label for="email">Email:</label><input type="email" id="email" name="email"><br>
+        <label for="education">Education:</label>
+        <select id="education" name="education">
+            <option value="1">大专</option>
+            <option value="2">本科</option>
+            <option value="3">硕士研究生</option>
+            <option value="4">博士研究生</option>
+        </select><br>
+        <label for="remark">Remark:</label><textarea id="remark" name="remark"></textarea>
         <!-- 以字典格式提交数据{"user":"zhangsan", "pwd":"123"}-->
         <div>
             <input type="submit" value="登录" />
@@ -90,22 +119,46 @@
             <li>ccc</li>
         </ol>
     </div>
-    <br>
+    <br><br><br><br><br>
     <table border="1">
         <thead>
         <tr>
-            <th name="no">序号</th>
-            <th name="str">名称</th>
-            <th name="date">日期</th>
+            <th class="no">序号</th>
+            <th class="str">名称</th>
+            <th class="date">日期</th>
         </tr>
         </thead>
         <tbody>
-        <tr style="height: 48px">
-            <td name="no"></td>
-            <td name="str"></td>
-            <td name="date"></td>
+        <tr>
+            <td class="no" rowspan="2"><a href="https://www.baidu.com" target="_blank">百度</a></td>
+            <td class="str"></td>
+            <td class="date"></td>
+        </tr>
+        <tr>
+            <td class="str"></td>
+            <td class="date"></td>
+        </tr>
+        <tr>
+            <td class="no" colspan="2"></td>
+            <td class="date"></td>
+        </tr>
+        <tr>
+            <td class="no"></td>
+            <td class="str"></td>
+            <td class="date"></td>
+        </tr>
+        <tr>
+            <td class="no"></td>
+            <td class="str"></td>
+            <td class="date"></td>
         </tr>
         </tbody>
+        <tfoot>
+        <tr>
+            <td style="text-align:right">sum</td>
+            <td colspan="2">3</td>
+        </tr>
+        </tfoot>
     </table>
 </body>
 </html>
