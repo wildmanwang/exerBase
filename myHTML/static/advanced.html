@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .inputframe{
+            display: inline-block;
+            width: 310px;
+            position: relative;
+            margin: 10px auto;
+        }
+        .label{
+            display: inline-block;
+            width: 100px;
+            height: 35px;
+            line-height: 35px;
+            text-align: right;
+        }
+        .input{
+            display: inline-block;
+            width: 165px;
+            height: 35px;
+            line-height: 35px;
+            padding-right: 35px;
+        }
+        .icon{
+            display: inline-block;
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            top: 8px;
+            right: 5px;
+            background: #DDFFDD url("img/登录.png") 0 -50px no-repeat;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <div>
+            <div class="inputframe">
+                <label for="user" class="label">用户名：</label>
+                <input id="user" class="input" type="text" />
+                <div class="icon" style="background-position-y: 0"></div>
+            </div>
+        </div>
+        <div>
+            <div class="inputframe">
+                <label for="pwd" class="label">密码：</label>
+                <input id="pwd" class="input" type="password" />
+                <div class="icon" style="background-position-y: -25px"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
