@@ -33,9 +33,34 @@
             right: 5px;
             background: #DDFFDD url("img/登录.png") 0 -50px no-repeat;
         }
+        .cover{
+            position: fixed;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            background-color: black;
+            opacity: 0.5;
+            z-index: 10;
+        }
+        .model{
+            position: fixed;
+            width: 500px;
+            height: 400px;
+            left: 50%;
+            top: 50%;
+            margin-left: -250px;
+            margin-top: -200px;
+            background-color: white;
+            z-index: 11;
+        }
+        .hide{
+            display: none;
+        }
     </style>
 </head>
 <body>
+    <div id="i1" style="color: #FF6666; font-size: 20px;">欢迎习主席光临寒舍！&nbsp&nbsp&nbsp&nbsp&nbsp</div>
     <div>
         <div>
             <div class="inputframe">
@@ -52,5 +77,57 @@
             </div>
         </div>
     </div>
+    <div>
+        <input type="button" value="添加" onclick="show()">
+        <table>
+            <thead>
+                <tr>
+                    <th>主机地址</th>
+                    <th>端口号</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>192.168.1.1</td>
+                    <td>11</td>
+                </tr>
+                <tr>
+                    <td>192.168.1.1</td>
+                    <td>11</td>
+                </tr>
+                <tr>
+                    <td>192.168.1.1</td>
+                    <td>11</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!--遮罩层-->
+    <div id="i11" class="cover hide"></div>
+    <!--弹窗层-->
+    <div id="i12" class="model hide">
+        <form>
+            <input type="text" /><br>
+            <input type="text" /><br>
+            <input type="button" value="确定" />
+            <input type="button" value="取消" onclick="hide()" />
+        </form>
+    </div>
+    <script>
+        function fmove() {
+            var tag = document.getElementById("i1");
+            var sOld = tag.innerText;
+            tag.innerText = sOld.substring(1, sOld.length) + sOld.charAt(0)
+        }
+        setInterval("fmove()", 500)
+        function show() {
+            document.getElementById("i11").classList.remove("hide")
+            document.getElementById("i12").classList.remove("hide")
+        }
+        function hide() {
+            document.getElementById("i11").classList.add("hide")
+            document.getElementById("i12").classList.add("hide")
+        }
+    </script>
 </body>
 </html>
