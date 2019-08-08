@@ -45,6 +45,7 @@
         </thead>
         <tbody id="t0"></tbody>
     </table>
+    <script src="js/test.js"></script>
     <script>
         var table_data = [
             ['切配', '肉类', '牛肉片', '出成率：100%'],
@@ -55,71 +56,21 @@
             ['热厨', '肉类', '熟牛肉', '出成率：92%'],
             ['热厨', '蔬菜类', '炒小米椒', '出成率：92%']
         ];
-        function span_compute(dataList) {
-            var span_data = [];
-            for ( var i=0; i<dataList.length; i++){
-                span_data.push([1,1,1,1]);
-                if(i>0){
-                    if(dataList[i][0] === dataList[i-1][0]){
-                        span_data[i][0] = 0;
-                        for( var j=i-1; j>=0; j--){
-                            if(span_data[j][0] > 0){
-                                span_data[j][0] ++;
-                                break
-                            }
-                        }
-                        if(dataList[i][1] === dataList[i-1][1]){
-                            span_data[i][1] = 0;
-                            for( j=i-1; j>=0; j--){
-                                if(span_data[j][1] >0){
-                                    span_data[j][1] ++;
-                                    break
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            return span_data
-        }
-        var spanResult = span_compute(table_data);
+        var spanResult = tableSpan(table_data, [0, 1, 2]);
+        var tag0, tagRow, tagCol, tagCol1, tagCol2, tagCol3, tagCol4;
         tag0 = document.getElementById("t0");
-        var tag0, tagRow, tagCol1, tagCol2, tagCol3, tagCol4;
         for( var k=0; k<table_data.length; k++){
             tagRow = document.createElement("tr");
             tagRow.className = "otherrow";
-            if(spanResult[k][0] > 0){
-                tagCol1 = document.createElement("td");
-                tagCol1.className = "col c1";
-                tagCol1.rowSpan = spanResult[k][0];
-                tagCol1.innerHTML = table_data[k][0];
-                tagRow.appendChild(tagCol1);
-                tag0.appendChild(tagRow);
-            }
-            if(spanResult[k][1] > 0) {
-                tagCol1 = document.createElement("td");
-                tagCol1.className = "col c2";
-                tagCol1.rowSpan = spanResult[k][1];
-                tagCol1.innerHTML = table_data[k][1];
-                tagRow.appendChild(tagCol1);
-                tag0.appendChild(tagRow);
-            }
-            if(spanResult[k][2] > 0) {
-                tagCol1 = document.createElement("td");
-                tagCol1.className = "col c3";
-                tagCol1.rowSpan = spanResult[k][2];
-                tagCol1.innerHTML = table_data[k][2];
-                tagRow.appendChild(tagCol1);
-                tag0.appendChild(tagRow);
-            }
-            if(spanResult[k][3] > 0) {
-                tagCol1 = document.createElement("td");
-                tagCol1.className = "col c4";
-                tagCol1.rowSpan = spanResult[k][3];
-                tagCol1.innerHTML = table_data[k][3];
-                tagRow.appendChild(tagCol1);
-                tag0.appendChild(tagRow);
-            }
+            tag0.appendChild(tagRow);
+            for( var j=0; j<table_data[k].length; j++)
+                if(spanResult[k][j] > 0){
+                    tagCol = document.createElement("td");
+                    tagCol.className = "col " + (j+1).toString();
+                    tagCol.rowSpan = spanResult[k][j];
+                    tagCol.innerText = table_data[k][j];
+                    tagRow.appendChild(tagCol);
+                }
         }
     </script>
 </body>
