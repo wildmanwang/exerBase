@@ -3,27 +3,21 @@
 """
 __author__ = "Cliff.wang"
 
-import socket
-import os
-
-server = socket.socket()
-server.bind(("localhost", 1212))
-server.listen()
-while True:
-    conn, addr = server.accept()
-    while True:
+import socketserver
+class MyTCPHandler(socketserver.BaseRequestHandler):
+    def handle(self):
+        '''try内的代码就是要实现的功能，目前是实现小写转大写，可以自定义，
+        try是在客户端结束时不报错
+        '''
         try:
-            dataRecv = conn.recv(1024)
+             while True:
+                self.data = self.request.recv(1024).strip()
+                print("{} wrote:".format(self.client_address[0]))
+                print(self.data)
+                self.request.sendall(self.data.upper())
         except ConnectionResetError as e:
-            print("Err:", e)
-            break
-        dataRecv = dataRecv.decode("utf-8")
-        sResult = os.popen(dataRecv).read()
-        print(sResult)
-        iLen = len(sResult)
-        sResult = sResult.encode("utf-8")
-        conn.send(str(iLen).encode("utf-8"))
-        conn.recv(1024)                     # 防止粘包
-        conn.send(sResult)
-
-server.close()
+            print(e)
+if __name__ == "__main__":
+    HOST, PORT = "localhost", 6969
+    server = socketserver.ThreadingTCPServer((HOST, PORT), MyTCPHandler)
+    server.serve_forever()
