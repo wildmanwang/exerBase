@@ -4,6 +4,20 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <style>
+        .blockh{
+            border: #888888 solid 1px;
+            background-color: #DDDDDD;
+        }
+        .blockd{
+            border: #888888 solid 1px;
+            background-color: white;
+        }
+        .col1{
+            width: 200px;
+        }
+        .col2{
+            width: 100px;
+        }
         .inputframe{
             display: inline-block;
             width: 310px;
@@ -79,25 +93,25 @@
     </div>
     <div>
         <input type="button" value="添加" onclick="show()">
-        <table>
+        <table style="border: darkslateblue solid 2px; border-collapse: collapse">
             <thead>
                 <tr>
-                    <th>主机地址</th>
-                    <th>端口号</th>
+                    <th class="blockh col1">主机地址</th>
+                    <th class="blockh col2">端口号</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>192.168.1.1</td>
-                    <td>11</td>
+                    <td class="blockd col1">192.168.1.1</td>
+                    <td class="blockd col2">11</td>
                 </tr>
                 <tr>
-                    <td>192.168.1.1</td>
-                    <td>11</td>
+                    <td class="blockd col1">192.168.1.1</td>
+                    <td class="blockd col2">11</td>
                 </tr>
                 <tr>
-                    <td>192.168.1.1</td>
-                    <td>11</td>
+                    <td class="blockd col1">192.168.1.1</td>
+                    <td class="blockd col2">11</td>
                 </tr>
             </tbody>
         </table>
