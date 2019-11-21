@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>H5练习合集</title>
-    <style>
-        .top_menu:hover{
-            background-color: navy;
-        }
-    </style>
 </head>
 <body style="margin: 0">
     <div style="height: 48px; line-height: 48px; background-color: #0237aa; position: fixed; top: 0; left: 0; right: 0;">
         <div style="width: 980px; margin: 0 auto; ">
+            <style>
+                .top_menu:hover{
+                    background-color: navy;
+                }
+            </style>
             <a style="display: inline-block; padding: 0 20px; color: red">顶部菜单</a>
             <a class="top_menu" style="display: inline-block; padding: 0 20px; color: white">标签</a>
             <a class="top_menu" style="display: inline-block; padding: 0 20px; color: white">颜色</a>
@@ -40,6 +40,39 @@
                 </tr>
             </tbody>
         </table>
+        <h2>鼠标悬浮</h2>
+        <div>
+            <style>
+                .s1:hover {
+                    background-color: #FF6666;
+                }
+                #s2:hover .s2 {
+                    background-color: #FF6666;
+                }
+                #s31:hover + #s32 {
+                    background-color: #FF6666;
+                }
+                #s41:hover ~ #s42 {
+                    background-color: #FF6666;
+                }
+            </style>
+            <div style="width: 100px; height: 100px; border: 1px solid red; float: left">
+                <span class="s1" style="width: 30px; height: 30px; border: 1px solid blue; margin: 20px 0px 20px 20px; float: left"></span>
+                <span class="s1" style="width: 30px; height: 30px; border: 1px solid blue; margin: 20px 0px; float: left"></span>
+            </div>
+            <div id="s2" style="width: 100px; height: 100px; border: 1px solid red; float: left">
+                <span class="s2" style="width: 30px; height: 30px; border: 1px solid blue; margin: 20px 0px 20px 20px; float: left"></span>
+                <span class="s2" style="width: 30px; height: 30px; border: 1px solid blue; margin: 20px 0px; float: left"></span>
+            </div>
+            <div style="width: 100px; height: 100px; border: 1px solid red; float: left">
+                <span id="s31" style="width: 30px; height: 30px; border: 1px solid blue; margin: 20px 0px 20px 20px; float: left"></span>
+                <span id="s32" style="width: 30px; height: 30px; border: 1px solid blue; margin: 20px 0px; float: left"></span>
+            </div>
+            <div style="width: 100px; height: 100px; border: 1px solid red; float: left">
+                <span id="s41" style="width: 30px; height: 30px; border: 1px solid blue; margin: 20px 0px 20px 20px; float: left"></span>
+                <span id="s42" style="width: 30px; height: 30px; border: 1px solid blue; margin: 20px 0px; float: left"></span>
+            </div>
+        </div>
     </div>
 </body>
 </html>

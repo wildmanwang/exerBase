@@ -12,7 +12,7 @@
                 height: 100px;
                 border: solid 1px red;
                 background-color: wheat;
-                /*float: left;*/
+                float: left;
             }
             .item2{
                 width: 100px;
@@ -22,9 +22,9 @@
                 float: left;
                 display: none;
             }
-            /*.item:hover .item2 {*/
-            /*    display: block;*/
-            /*}*/
+            .item1:hover + .item2 {
+                display: block;
+            }
         </style>
     </head>
     <body>
