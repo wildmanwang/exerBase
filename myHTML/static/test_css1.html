@@ -1,55 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <style>
-        .pg_header{
-            height: 48px;
-            line-height: 48px;
-            background-color: #2459a2;
-            position: fixed;
-            top: 0;
-            right: 0;
-            left: 0;
-        }
-        .pg_body{
-            margin-top: 50px;
-        }
-        .con{
-            width: 980px;
-            margin: 0 auto;
-        }
-        .pg_header .LOGO{
-            color: red;
-            padding: 0 20px;
-        }
-        .pg_header .menu{
-            display: inline-block;
-            color: white;
-            padding: 0 20px;
-        }
-        .pg_header .menu:hover{
-            background-color: #0237aa;
-        }
-    </style>
-</head>
-<body style="margin: 0">
-    <div class="pg_header">
-        <div class="con">
-            <a class="LOGO">中华英雄</a>
-            <a class="menu">忠诚</a>
-            <a class="menu">勇敢</a>
-            <a class="menu">坚持</a>
-            <a class="menu">正义</a>
-            <a class="menu">诚信</a>
-        </div>
-    </div>
-    <div class="pg_body">
-        <div class="con">
-            <h3>这里是正文</h3>
-            <div style="height: 1920px; width: 1080px; background-color: #AAAAAA"></div>
-        </div>
-    </div>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+        <style>
+            .item{
+                height: 100px;
+            }
+            .item1{
+                width: 100px;
+                height: 100px;
+                border: solid 1px red;
+                background-color: wheat;
+                /*float: left;*/
+            }
+            .item2{
+                width: 100px;
+                height: 100px;
+                border: solid 1px blue;
+                background-color: blue;
+                float: left;
+                display: none;
+            }
+            /*.item:hover .item2 {*/
+            /*    display: block;*/
+            /*}*/
+        </style>
+    </head>
+    <body>
+       <div class="item">
+           <span class="item1">The first</span>
+           <span class="item2">The second</span>
+       </div>
+    </body>
 </html>

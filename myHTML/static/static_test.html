@@ -52,12 +52,19 @@
             width:100px;
             background-color:#DDDDFF;
         }
+        #d1:hover #d2 {
+            display: block;
+        }
     </style>
 </head>
 <body style="margin: 0 0 0 0">
     <a href="#m1">文字区</a>
     <a href="#m2">表单区</a>
     <a href="#m3">表格区</a>
+    <div id="d1" style="width: 100px; height: 100px; border: #2459a2 1px solid; background-color: #EECCEE; float: left; text-align: center; line-height: 100px">The first</div>
+    <div id="d2" style="width: 100px; height: 100px; border: #2459a2 1px solid; background-color: aquamarine; float: left; text-align: center; line-height: 100px; display: none">The Second</div>
+    <div style="width: 100px; height: 100px; border: #2459a2 1px solid; background-color: cornflowerblue; float: left; clear: left"></div>
+    <div style="width: 100px; height: 100px; border: #2459a2 1px solid; background-color: gold; float: left"></div>
     <ul>
         <li>第一页</li>
         <li>第二页</li>
@@ -94,6 +101,8 @@
     <div>黄河之水天上来</div>
     <div>东流到海不复还</div>
     <img src="img/怀旧.jpg" alt="找不到图片时显示的文字" title="图片标题" />
+    <span style="vertical-align: bottom">Welcome to python!</span>
+    <span style="vertical-align: top">How are you!</span>
     <form id="m2" action="" method="get">
         <h4 style="margin: 10px 0 10px 0; height:32px; line-height: 32px; background-color: gainsboro; color: white">User Regist</h4>
         <label for="user">User:</label><input type="text" id="user" name="user" /><br>
