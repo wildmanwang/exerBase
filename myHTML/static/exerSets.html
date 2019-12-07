@@ -21,27 +21,102 @@
         </div>
     </div>
     <div style="width: 980px; margin: 70px auto;">
-        <h2>表格</h2>
-        <table style="border: darkslateblue solid 2px; border-collapse: collapse; ">
-            <thead>
-                <tr style="background-color: darkslategrey; color: white; ">
-                    <th style="width: 100px; border: lightsteelblue solid 1px;">Col1</th>
-                    <th style="width: 200px; border: lightsteelblue solid 1px;">Col2</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td style="border: lightsteelblue solid 1px;">001</td>
-                    <td style="border: lightsteelblue solid 1px;">雪域高原</td>
-                </tr>
-                <tr>
-                    <td style="border: lightsteelblue solid 1px;">002</td>
-                    <td style="border: lightsteelblue solid 1px;">林海雪原</td>
-                </tr>
-            </tbody>
-        </table>
-        <h2>鼠标悬浮</h2>
+        <h2>跑马灯</h2>
         <div>
+            <div id="word_run" style="display: inline-block; width: 300px; height: 40px; border: #888888 1px solid; font-size: 16px; color: #DDFFDD; background-color: darkslategray">热烈欢迎领导莅临检查工作！&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+            <script>
+                function fWordRun() {
+                    var tag = document.getElementById("word_run");
+                    var old_text = tag.innerText;
+                    tag.innerText = old_text.substring(1, old_text.length) + old_text.charAt(0);
+                }
+                setInterval("fWordRun()", 500);
+            </script>
+        </div>
+        <h2>图片截取</h2>
+        <div style="width: 400px; border: #888888 1px solid; background-color: #EEEEEE">
+            <div style="margin-top: 10px; overflow: hidden">
+                <label for="user" style="display: inline-block; width: 120px; height: 30px; text-align: right; line-height: 30px; float: left">用户名：</label>
+                <input id="user" type="text" style="width: 200px; height: 30px; float: left">
+                <div style="display: inline-block; width: 25px; height: 25px; background: url('img/登录.png'); margin-left: -35px; margin-top: 4px; background-position-y: 0"></div>
+            </div>
+            <div style="margin: 10px 0; overflow: hidden">
+                <label for="pwd" style="display: inline-block; width: 120px; height: 30px; text-align: right; line-height: 30px; float: left">密码：</label>
+                <input id="pwd" type="password" style="width: 200px; height: 30px; float: left">
+                <div style="display: inline-block; width: 25px; height: 25px; background: url('img/登录.png'); margin-left: -35px; margin-top: 4px; background-position-y: -25px"></div>
+            </div>
+        </div>
+        <h2>弹出框</h2>
+        <div>
+            <style>
+                .hide {
+                    display: none;
+                }
+            </style>
+            <input type="button" value="点击弹窗" onclick="fShowBox()" style="width: 120px; height: 40px;">
+            <div id="box0" class="hide" style="position: fixed; top: 0; right: 0; bottom: 0; left: 0; background-color: #888888; opacity: 0.5; z-index: 10"></div>
+            <div id="box1" class="hide" style="position: fixed; width: 360px; height: 240px; background-color: white; border: #888888 1px solid; left: 50%; top: 50%; margin-left: -180px; margin-top: -120px; z-index: 11">
+                <div style="width: 300px; height: 150px; margin: 20px; border: #BBBBBB 1px solid; background-color: #EEEEEE;"></div>
+                <input type="button" value="确定" onclick="fHideBox()" style="width: 100px; height: 30px; margin: 0 20px;">
+            </div>
+            <script>
+                function fShowBox() {
+                    document.getElementById("box0").classList.remove("hide");
+                    document.getElementById("box1").classList.remove("hide");
+                }
+                function fHideBox() {
+                    document.getElementById("box0").classList.add("hide");
+                    document.getElementById("box1").classList.add("hide");
+                }
+            </script>
+        </div>
+        <h2>合并单元格</h2>
+        <table style="border: #888888 1px solid; border-collapse: collapse">
+                <style>
+                    .col{
+                        width: 200px;
+                        border: #888888 1px solid;
+                    }
+                </style>
+                <thead>
+                    <tr style="background-color: cadetblue; ">
+                        <th class="col" style="color: white">操作类型</th>
+                        <th class="col" style="color: white">物料类型</th>
+                        <th class="col" style="color: white">物料名称</th>
+                        <th class="col" style="color: white">出成率(%)</th>
+                    </tr>
+                </thead>
+                <tbody id="t0"></tbody>
+                <script src="js/test.js"></script>
+                <script>
+                    var table_data = [
+                        ['切配', '肉类', '牛肉片', '100.00'],
+                        ['切配', '肉类', '鸡肉片', '96.00'],
+                        ['切配', '蔬菜类', '蒜薹段', '95.00'],
+                        ['切配', '蔬菜类', '红椒圈', '98.00'],
+                        ['腌制', '肉类', '腌牛肉', '92.00'],
+                        ['热厨', '肉类', '熟牛肉', '92.00'],
+                        ['热厨', '蔬菜类', '炒小米椒', '92.00']
+                    ];
+                    var spanResult = tableSpan(table_data, [0, 1, 2]);
+                    var tag0, tagRow, tagCol;
+                    tag0 = document.getElementById("t0");
+                    for( var k=0; k<table_data.length; k++){
+                        tagRow = document.createElement("tr");
+                        tag0.appendChild(tagRow);
+                        for( var j=0; j<table_data[k].length; j++)
+                            if(spanResult[k][j] > 0){
+                                tagCol = document.createElement("td");
+                                tagCol.className = "col";
+                                tagCol.rowSpan = spanResult[k][j];
+                                tagCol.innerText = table_data[k][j];
+                                tagRow.appendChild(tagCol);
+                            }
+                    }
+                </script>
+            </table>
+        <h2>鼠标悬浮</h2>
+        <div style="overflow: hidden">
             <style>
                 .s1:hover {
                     background-color: #FF6666;
@@ -71,6 +146,52 @@
             <div style="width: 100px; height: 100px; border: 1px solid red; float: left">
                 <span id="s41" style="width: 30px; height: 30px; border: 1px solid blue; margin: 20px 0px 20px 20px; float: left"></span>
                 <span id="s42" style="width: 30px; height: 30px; border: 1px solid blue; margin: 20px 0px; float: left"></span>
+            </div>
+        </div>
+        <h2>父元素塌陷</h2>
+        <div style="border: #888888; background-color: #DDDDDD">
+            <div style="display: inline-block; border: #888888 1px solid; width: 200px; background-color: #DDDDFF">
+                <span style="display: inline-block; font-weight: bold; padding: 5px 10px; float: left">行内块级标签</span>
+                <span style="display: inline-block; height: 40px; font-size: 12px; color: #888888; padding: 5px 10px; float: left; clear: left">父元素display=inline-block</span>
+                <a style="display: inline-block; padding: 5px 10px; float: left; clear: left" href="">子项</a>
+                <a style="display: inline-block; padding: 5px 10px; float: left" href="">子项</a>
+                <a style="display: inline-block; padding: 5px 10px; float: left" href="">子项</a>
+            </div>
+            <div style="display: inline-block; width: 200px">
+                <div style="border: #888888 1px solid; background-color: #DDDDFF; overflow: hidden">
+                    <span style="display: inline-block; font-weight: bold; padding: 5px 10px; float: left">隐藏溢出</span>
+                    <span style="display: inline-block; height: 40px; font-size: 12px; color: #888888; padding: 5px 10px; float: left; clear: left">父元素overflow=hidden<br/>由于漂浮元素无法裁剪，因此父元素只能包裹子项</span>
+                    <a style="display: inline-block; padding: 5px 10px; float: left; clear: left" href="">子项</a>
+                    <a style="display: inline-block; padding: 5px 10px; float: left" href="">子项</a>
+                    <a style="display: inline-block; padding: 5px 10px; float: left" href="">子项</a>
+                </div>
+            </div>
+            <div style="display: inline-block; width: 200px">
+                <style>
+                    .son:after{
+                        content: "";
+                        clear: both;        /*清除浮动*/
+                        display: block;     /*确保该元素是块级元素*/
+                    }
+                </style>
+                <div style="border: #888888 1px solid; background-color: #DDDDFF">
+                    <span style="display: inline-block; font-weight: bold; padding: 5px 10px; float: left">伪类清除浮动</span>
+                    <span style="display: inline-block; height: 40px; font-size: 12px; color: #888888; padding: 5px 10px; float: left; clear: left">子元素after伪类定义<br/>display=block<br/>clear=both</span>
+                    <a style="display: inline-block; padding: 5px 10px; float: left; clear: left" href="">子项</a>
+                    <a style="display: inline-block; padding: 5px 10px; float: left" href="">子项</a>
+                    <a style="display: inline-block; padding: 5px 10px; float: left" href="">子项</a>
+                    <a class="son"></a>
+                </div>
+            </div>
+            <div style="display: inline-block; width: 200px">
+                <div style="border: #888888 1px solid; background-color: #DDDDFF">
+                    <span style="display: inline-block; font-weight: bold; padding: 5px 10px; float: left">其他方式</span>
+                    <span style="display: inline-block; height: 40px; font-size: 12px; color: #888888; padding: 5px 10px; float: left; clear: left">父元素也float<br/>或者末尾子元素定义以下属性：<br/>display=block;clear=both</span>
+                    <a style="display: inline-block; padding: 5px 10px; float: left; clear: left" href="">子项</a>
+                    <a style="display: inline-block; padding: 5px 10px; float: left" href="">子项</a>
+                    <a style="display: inline-block; padding: 5px 10px; float: left" href="">子项</a>
+                    <a style="display: block; clear: both"></a>
+                </div>
             </div>
         </div>
     </div>
