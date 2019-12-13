@@ -28,6 +28,9 @@
             background-image: url('img/功能.png');
             background-repeat: no-repeat;
         }
+        .hide{
+            display: none;
+        }
     </style>
 </head>
 <body style="border: none; margin: 0; padding: 0; ">
@@ -42,24 +45,34 @@
     <!--下部-->
     <div style="position: relative; left: 0; top: 60px; right: 0; bottom: 0; background-color: #FF6666">
         <!--左侧菜单栏-->
-        <div style="position: absolute; width: 250px; height: 900px; left: 0; top: 0; background-color: #555555">
-            <div class="funGp">功能列表</div>
-                <div class="funItem">我的主页</div>
-                <div class="funItem">基础资料</div>
-                <div class="funItem">单据管理</div>
-                <div class="funItem">报表查询</div>
-            <div class="funGp">其他功能</div>
-                <div class="funItem">功能1</div>
-                <div class="funItem">功能2</div>
-                <div class="funItem">功能3</div>
-                <div class="funItem">功能4</div>
-            <div class="funGp">系统菜单</div>
-                <div class="funItem">关于</div>
-                <div class="funItem">修改密码</div>
-                <div class="funItem">锁屏</div>
+        <div id="menu" style="position: absolute; width: 250px; height: 900px; left: 0; top: 0; background-color: #555555">
+            <div id="gpFunc" class="funGp" onclick="fClickGp('gpFunc')">功能列表</div>
+                <div class="funItem hide">我的主页</div>
+                <div class="funItem hide">基础资料</div>
+                <div class="funItem hide">单据管理</div>
+                <div class="funItem hide">报表查询</div>
+            <div id="gpOther" class="funGp" onclick="fClickGp('gpOther')">其他功能</div>
+                <div class="funItem hide">功能1</div>
+                <div class="funItem hide">功能2</div>
+                <div class="funItem hide">功能3</div>
+                <div class="funItem hide">功能4</div>
+            <div id="gpSys" class="funGp" onclick="fClickGp('gpSys')">系统菜单</div>
+                <div class="funItem hide">关于</div>
+                <div class="funItem hide">修改密码</div>
+                <div class="funItem hide">锁屏</div>
         </div>
         <!--右侧内容区-->
-        <div style="position: absolute; height: 900px; left: 250px; top: 0; right: 0; background-color: #FFDDDD"></div>
+        <div style="position: absolute; height: 900px; left: 250px; top: 0; right: 0; border: #555555 1px solid; background-color: #EEEEEE"></div>
     </div>
+    <script>
+        function fClickGp(tagID) {
+            // 获取当前标签
+            var curTag = document.getElementById(tagID);
+            // 收缩其他分组
+            var parentTag = curTag.parentElement;
+
+            //展开当前分组
+        }
+    </script>
 </body>
 </html>
