@@ -68,9 +68,19 @@
         function fClickGp(tagID) {
             // 获取当前标签
             var curTag = document.getElementById(tagID);
+            var gpTags = document.querySelectorAll("#" + tagID + " .funItem");
+            console.log(gpTags.length);
+            for (var i in gpTags) {
+                console.log(i);
+                //gpTags[i].classList.remove("hide");
+            }
             // 收缩其他分组
-            var parentTag = curTag.parentElement;
-
+            gpTags = document.querySelectorAll(".funGp");
+            for (i in gpTags) {
+                if (gpTags[i] === curTag) {
+                    gpTags[item].classList.add("hide");
+                }
+            }
             //展开当前分组
         }
     </script>
