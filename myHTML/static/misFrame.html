@@ -31,6 +31,9 @@
         .hide{
             display: none;
         }
+        .menu a{
+            color: #FF6666;
+        }
     </style>
 </head>
 <body style="border: none; margin: 0; padding: 0; ">
@@ -45,43 +48,60 @@
     <!--下部-->
     <div style="position: relative; left: 0; top: 60px; right: 0; bottom: 0; background-color: #FF6666">
         <!--左侧菜单栏-->
-        <div id="menu" style="position: absolute; width: 250px; height: 900px; left: 0; top: 0; background-color: #555555">
-            <div id="gpFunc" class="funGp" onclick="fClickGp('gpFunc')">功能列表</div>
-                <div class="funItem hide">我的主页</div>
+        <div class="menu" style="position: absolute; width: 250px; height: 900px; left: 0; top: 0; background-color: #555555">
+            <div>
+                <div id="gpFunc" class="funGp" onclick="fClickGp('gpFunc')">功能列表</div>
+                <div class="funItem hide"><a href="exerSets.html">我的主页</a>></div>
                 <div class="funItem hide">基础资料</div>
                 <div class="funItem hide">单据管理</div>
                 <div class="funItem hide">报表查询</div>
-            <div id="gpOther" class="funGp" onclick="fClickGp('gpOther')">其他功能</div>
+            </div>
+            <div>
+                <div id="gpOther" class="funGp" onclick="fClickGp('gpOther')">其他功能</div>
                 <div class="funItem hide">功能1</div>
                 <div class="funItem hide">功能2</div>
                 <div class="funItem hide">功能3</div>
                 <div class="funItem hide">功能4</div>
-            <div id="gpSys" class="funGp" onclick="fClickGp('gpSys')">系统菜单</div>
+            </div>
+            <div>
+                <div id="gpSys" class="funGp" onclick="fClickGp('gpSys')">系统菜单</div>
                 <div class="funItem hide">关于</div>
                 <div class="funItem hide">修改密码</div>
                 <div class="funItem hide">锁屏</div>
+            </div>
         </div>
         <!--右侧内容区-->
         <div style="position: absolute; height: 900px; left: 250px; top: 0; right: 0; border: #555555 1px solid; background-color: #EEEEEE"></div>
     </div>
     <script>
         function fClickGp(tagID) {
-            // 获取当前标签
+            // 获取当前及父标签
             var curTag = document.getElementById(tagID);
-            var gpTags = document.querySelectorAll("#" + tagID + " .funItem");
-            console.log(gpTags.length);
-            for (var i in gpTags) {
-                console.log(i);
-                //gpTags[i].classList.remove("hide");
-            }
+            var parentTag = curTag.parentElement;
             // 收缩其他分组
-            gpTags = document.querySelectorAll(".funGp");
-            for (i in gpTags) {
-                if (gpTags[i] === curTag) {
-                    gpTags[item].classList.add("hide");
+            var allTag = parentTag.parentElement.children;
+            for (var i in allTag){
+                if (typeof (allTag[i]) == "object") {
+                    var childTag = allTag[i].children;
+                    for (var j in childTag) {
+                        if (typeof (childTag[j].className) == "string") {
+                            if(childTag[j].className.indexOf("funItem") >= 0) {
+                                childTag[j].classList.add("hide");
+                            }
+                        }
+                    }
                 }
+                else console.log(typeof (allTag[i].className));
             }
             //展开当前分组
+            allTag = parentTag.children;
+            for (i in allTag) {
+                if (typeof (allTag[i].className) == "string") {
+                    if (allTag[i].className.indexOf("funItem") >= 0) {
+                        allTag[i].classList.remove("hide");
+                    }
+                }
+            }
         }
     </script>
 </body>
