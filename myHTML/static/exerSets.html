@@ -58,7 +58,9 @@
                 }
             </style>
             <input type="button" value="点击弹窗" onclick="fShowBox()" style="width: 120px; height: 40px;">
+            <!--遮罩层-->
             <div id="box0" class="hide" style="position: fixed; top: 0; right: 0; bottom: 0; left: 0; background-color: #888888; opacity: 0.5; z-index: 10"></div>
+            <!--弹窗层-->
             <div id="box1" class="hide" style="position: fixed; width: 360px; height: 240px; background-color: white; border: #888888 1px solid; left: 50%; top: 50%; margin-left: -180px; margin-top: -120px; z-index: 11">
                 <div style="width: 300px; height: 150px; margin: 20px; border: #BBBBBB 1px solid; background-color: #EEEEEE;"></div>
                 <input type="button" value="确定" onclick="fHideBox()" style="width: 100px; height: 30px; margin: 0 20px;">

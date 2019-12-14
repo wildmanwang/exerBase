@@ -19,7 +19,6 @@
         .funItem{
             height: 30px;
             background-color: #EEEEEE;
-            color: #555555;
             font-size: 12px;
             padding-left: 60px;
             line-height: 30px;
@@ -28,17 +27,18 @@
             background-image: url('img/功能.png');
             background-repeat: no-repeat;
         }
+        .menu a{
+            text-decoration: none;
+            color: #555555;
+        }
         .hide{
             display: none;
-        }
-        .menu a{
-            color: #FF6666;
         }
     </style>
 </head>
 <body style="border: none; margin: 0; padding: 0; ">
     <!--顶部标题栏-->
-    <div style="position: fixed; left: 0; top: 0; right: 0; height: 60px; background-color: #555555;">
+    <div style="position: fixed; left: 0; top: 0; right: 0; height: 60px; background-color: #555555">
         <img src="img/mis.png" style="width: 30px; height: 30px; margin: 15px 20px; float: left; " />
         <div style="display: inline-block; color: white; font-size: 20px; line-height: 60px; float: left">某某某后台管理系统</div>
         <div style="display: inline-block; color: white; font-size: 12px; border: white 1px solid; width: 80px; height: 30px; text-align: center; line-height: 30px; margin: 15px 20px; float: right">退出登录</div>
@@ -46,32 +46,32 @@
         <img src="img/头像.png" style="width: 30px; height: 30px; margin: 15px 10px; float: right; " />
     </div>
     <!--下部-->
-    <div style="position: relative; left: 0; top: 60px; right: 0; bottom: 0; background-color: #FF6666">
+    <div style="position: relative; left: 0; top: 60px; right: 0; height: 900px; background-color: #FF6666">
         <!--左侧菜单栏-->
-        <div class="menu" style="position: absolute; width: 250px; height: 900px; left: 0; top: 0; background-color: #555555">
-            <div>
+        <div class="menu" style="position: absolute; left: 0; top: 0; width: 250px; bottom: 0; background-color: #555555; ">
+            <div style="margin-top: 10px;">
                 <div id="gpFunc" class="funGp" onclick="fClickGp('gpFunc')">功能列表</div>
-                <div class="funItem hide"><a href="exerSets.html">我的主页</a>></div>
-                <div class="funItem hide">基础资料</div>
-                <div class="funItem hide">单据管理</div>
-                <div class="funItem hide">报表查询</div>
+                <div class="funItem hide" onclick="fOpenWin('我的主页')">我的主页</div>
+                <div class="funItem hide" onclick="fOpenWin('基础资料')">基础资料</div>
+                <div class="funItem hide" onclick="fOpenWin('单据管理')">单据管理</div>
+                <div class="funItem hide" onclick="fOpenWin('报表查询')">报表查询</div>
             </div>
             <div>
                 <div id="gpOther" class="funGp" onclick="fClickGp('gpOther')">其他功能</div>
-                <div class="funItem hide">功能1</div>
-                <div class="funItem hide">功能2</div>
-                <div class="funItem hide">功能3</div>
-                <div class="funItem hide">功能4</div>
+                <div class="funItem hide" onclick="fOpenWin('功能1')">功能1</div>
+                <div class="funItem hide" onclick="fOpenWin('功能2')">功能2</div>
+                <div class="funItem hide" onclick="fOpenWin('功能3')">功能3</div>
+                <div class="funItem hide" onclick="fOpenWin('功能4')">功能4</div>
             </div>
             <div>
                 <div id="gpSys" class="funGp" onclick="fClickGp('gpSys')">系统菜单</div>
-                <div class="funItem hide">关于</div>
-                <div class="funItem hide">修改密码</div>
-                <div class="funItem hide">锁屏</div>
+                <div class="funItem hide" onclick="fOpenWin('关于')">关于</div>
+                <div class="funItem hide" onclick="fOpenWin('修改密码')">修改密码</div>
+                <div class="funItem hide" onclick="fOpenWin('锁屏')">锁屏</div>
             </div>
         </div>
         <!--右侧内容区-->
-        <div style="position: absolute; height: 900px; left: 250px; top: 0; right: 0; border: #555555 1px solid; background-color: #EEEEEE"></div>
+        <iframe id="myFrame" style="position: absolute; left: 250px; top: 0; width: 1280px; height: 898px; border: #555555 1px solid; background-color: #FFEEEE; "></iframe>
     </div>
     <script>
         function fClickGp(tagID) {
@@ -102,6 +102,14 @@
                     }
                 }
             }
+        }
+
+        function fOpenWin(name) {
+            var frame = document.getElementById("myFrame")
+            if (name === "我的主页"){
+                frame.src = "exerSets.html"
+            }
+            else frame.src = "tmpTest.html"
         }
     </script>
 </body>
