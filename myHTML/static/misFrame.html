@@ -16,15 +16,20 @@
         #user:hover{
             background-color: #888888;
         }
+        #user_drop{
+            display: none;
+        }
         #user:hover #user_drop{
             display: block;
         }
-        #pg_top #user div a{
-            display: block;
+        #user_drop div{
             padding: 10px 15px;
             width: 170px;
             color: #555555;
             font-size: 12px;
+        }
+        #user_drop div:hover{
+            background-color: #EEEEFF;
         }
         #content #menu{
             position: absolute;
@@ -41,7 +46,7 @@
             bottom: 0;
             left: 252px;
             min-width: 800px;
-            background-color: #0237aa;
+            background-color: #DDDDDD;
             overflow: auto;
         }
         .funGp{
@@ -81,10 +86,10 @@
         <div id="user" style="position: relative; display: inline-block; width: 140px; height: 60px; float: right">
             <div style="display: inline-block; margin-right: 20px; color: white; font-size: 12px; line-height: 60px; float: right">拾落的流星</div>
             <img src="img/头像.png" style="width: 30px; height: 30px; border-radius: 50%; margin: 15px 10px; float: right; " />
-            <div id="user_drop" style="position: absolute; width: 200px; top: 60px; right: -20px; background-color: #FFDDDD; border: #888888 1px solid; z-index: 20; display: none ">
-                <a>我的资料</a>
-                <a>修改密码</a>
-                <a>注销</a>
+            <div id="user_drop" style="position: absolute; width: 200px; top: 60px; right: -20px; background-color: #FFEEEE; border: #888888 1px solid; z-index: 20 ">
+                <div onclick="fClickUser('我的资料')">我的资料</div>
+                <div onclick="fClickUser('修改密码')">修改密码</div>
+                <div onclick="fClickUser('退出')">退出</div>
             </div>
         </div>
     </div>
@@ -93,28 +98,28 @@
         <!--左侧菜单栏-->
         <div id="menu">
             <div style="margin-top: 10px;">
-                <div id="gpFunc" class="funGp" onclick="fClickGp('gpFunc')">功能列表</div>
+                <div id="gpFunc" class="funGp" data-ext="0" onclick="fClickGp('gpFunc')">功能列表</div>
                 <div class="funItem hide" onclick="fOpenWin('我的主页')">我的主页</div>
                 <div class="funItem hide" onclick="fOpenWin('基础资料')">基础资料</div>
                 <div class="funItem hide" onclick="fOpenWin('单据管理')">单据管理</div>
                 <div class="funItem hide" onclick="fOpenWin('报表查询')">报表查询</div>
             </div>
             <div>
-                <div id="gpOther" class="funGp" onclick="fClickGp('gpOther')">其他功能</div>
+                <div id="gpOther" class="funGp" data-ext="0" onclick="fClickGp('gpOther')">其他功能</div>
                 <div class="funItem hide" onclick="fOpenWin('功能1')">功能1</div>
                 <div class="funItem hide" onclick="fOpenWin('功能2')">功能2</div>
                 <div class="funItem hide" onclick="fOpenWin('功能3')">功能3</div>
                 <div class="funItem hide" onclick="fOpenWin('功能4')">功能4</div>
             </div>
             <div>
-                <div id="gpSys" class="funGp" onclick="fClickGp('gpSys')">系统菜单</div>
+                <div id="gpSys" class="funGp" data-ext="0" onclick="fClickGp('gpSys')">系统菜单</div>
                 <div class="funItem hide" onclick="fOpenWin('关于')">关于</div>
                 <div class="funItem hide" onclick="fOpenWin('修改密码')">修改密码</div>
                 <div class="funItem hide" onclick="fOpenWin('锁屏')">锁屏</div>
             </div>
         </div>
         <!--右侧内容区-->
-        <div id="myFrame" style="z-index: 10; ">
+        <div id="myFrame" style="z-index: 15; ">
             <p>abcd</p><p>abcd</p><p>abcd</p><p>abcd</p><p>abcd</p>
             <p>abcd</p><p>abcd</p><p>abcd</p><p>abcd</p><p>abcd</p>
             <p>abcd</p><p>abcd</p><p>abcd</p><p>abcd</p><p>abcd</p>
@@ -129,8 +134,9 @@
         function fClickGp(tagID) {
             // 获取当前及父标签
             var curTag = document.getElementById(tagID);
+            var flag_ext = curTag.dataset.ext;
             var parentTag = curTag.parentElement;
-            // 收缩其他分组
+            // 收缩全部分组
             var allTag = parentTag.parentElement.children;
             for (var i in allTag){
                 if (typeof (allTag[i]) == "object") {
@@ -140,28 +146,39 @@
                             if(childTag[j].className.indexOf("funItem") >= 0) {
                                 childTag[j].classList.add("hide");
                             }
+                            else if (childTag[j].className.indexOf("funGp") >= 0) {
+                                childTag[j].dataset.ext = "0"
+                            }
                         }
                     }
                 }
-                else console.log(typeof (allTag[i].className));
             }
             //展开当前分组
-            allTag = parentTag.children;
-            for (i in allTag) {
-                if (typeof (allTag[i].className) == "string") {
-                    if (allTag[i].className.indexOf("funItem") >= 0) {
-                        allTag[i].classList.remove("hide");
+            if (flag_ext === "0") {
+                allTag = parentTag.children;
+                for (i in allTag) {
+                    if (typeof (allTag[i].className) == "string") {
+                        if (allTag[i].className.indexOf("funItem") >= 0) {
+                            allTag[i].classList.remove("hide");
+                        }
                     }
                 }
+                curTag.dataset.ext = "1";
             }
         }
 
+        function fClickUser(label) {
+            if (label === "我的资料") console.log("这是我的资料");
+            else if (label === "修改密码") console.log("这是修改密码");
+            else if (label === "退出") console.log("这是退出");
+        }
+
         function fOpenWin(name) {
-            var frame = document.getElementById("conPage")
+            var frame = document.getElementById("conPage");
             if (name === "我的主页"){
-                frame.src = "exerSets.html"
+                frame.src = "exerSets.html";
             }
-            else frame.src = "tmpTest.html"
+            else frame.src = "tmpTest.html";
         }
     </script>
 </body>
