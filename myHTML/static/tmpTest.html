@@ -22,9 +22,14 @@
     <div id="d3" style="width: 300px; height: 300px; border: blue 1px solid; background-color: #BBBBBB">
         <div id="d4" class="s2" style="width: 100px; height: 100px; border: blue 1px solid">方块2</div>
     </div>
+    <div id="dSize" style="display: inline-block; width: 200px; height: 100px; border: #BBBBBB 10px solid; margin: 10px; padding: 10px; background-color: #DD6666; float: left"></div>
+    <div id="dSize2" style="display: inline-block; width: 200px; height: 100px; margin-top: 20px; background-color: #DD6666; float: left"></div>
     <script src="js/jquery-3.4.1.js"></script>
     <script>
-
+        console.log("height:" + $("#dSize").height());
+        console.log("innerHeight:" + $("#dSize").innerHeight());
+        console.log("outerHeight:" + $("#dSize").outerHeight());
+        console.log("outerHeight(true):" + $("#dSize").outerHeight(true));
     </script>
 </body>
 </html>

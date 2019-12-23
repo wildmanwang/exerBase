@@ -20,7 +20,7 @@
     <div style="width: 980px; margin: 0 auto; ">
         <h1 style="color: darkblue">练习：jQuery</h1>
         <hr style="border: darkblue 2px double; width: 980px; ">
-        <h2>全选、反选、模态框</h2>
+        <h2>选择、模态框、表格编辑</h2>
         <div>
             <style>
                 table{
@@ -30,8 +30,15 @@
                 th, td{
                     width: 100px;
                     height: 30px;
-                    line-height: 36px;
+                    line-height: 30px;
                     border: #BBBBBB 1px solid;
+                    background-color: #EEEEEE;
+                }
+                .eInput{
+                    width: 120px;
+                    height: 30px;
+                    line-height: 30px;
+                    background-color: white;
                 }
             </style>
             <div>
@@ -39,6 +46,8 @@
                 <input id="cCancel" type="button" value="取消">
                 <input id="cReverse" type="button" value="反选">
                 <input id="new" type="button" value="新增">
+                <input id="test" type="button" value="测试">
+                <input id="edit" type="button" value="编辑" style="margin-left: 60px">
             </div>
             <table id="choose">
                 <thead>
@@ -46,32 +55,37 @@
                     <th>choose</th>
                     <th>IP</th>
                     <th>Port</th>
+                    <th>status</th>
                     <th>operate</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
+                <tr id="trtest">
                     <td colName="choose"><input type="checkbox"></td>
                     <td colName="ip">192.168.1.1</td>
                     <td colName="port">1088</td>
+                    <td colName="status">在线</td>
                     <td colName="operate"><a class="edit">修改</a> | <a class="del">删除</a></td>
                 </tr>
                 <tr>
                     <td colName="choose"><input type="checkbox"></td>
                     <td colName="ip">192.168.1.2</td>
                     <td colName="port">1088</td>
+                    <td colName="status">在线</td>
                     <td colName="operate"><a class="edit">修改</a> | <a class="del">删除</a></td>
                 </tr>
                 <tr>
                     <td colName="choose"><input type="checkbox"></td>
                     <td colName="ip">192.168.1.3</td>
                     <td colName="port">1088</td>
+                    <td colName="status">在线</td>
                     <td colName="operate"><a class="edit">修改</a> | <a class="del">删除</a></td>
                 </tr>
                 <tr>
                     <td colName="choose"><input type="checkbox"></td>
                     <td colName="ip">192.168.1.4</td>
                     <td colName="port">1088</td>
+                    <td colName="status">在线</td>
                     <td colName="operate"><a class="edit">修改</a> | <a class="del">删除</a></td>
                 </tr>
                 </tbody>
@@ -127,6 +141,55 @@
                 $("#cancel").click(function () {
                     $(".shade,.model").addClass("hide");
                     $(".model input[type='text']").val("");
+                });
+                $("#test").click(function () {
+                    console.log("test");
+                });
+                $("#edit").click(function () {
+                    if ($(this).val() === "查看") {
+                        $("#choose tr").each(function () {
+                            $(this).find("[colName='ip']").text($(this).find("[colName='eip']").val());
+                            $(this).find("[colName='eip']").remove();
+                            $(this).find("[colName='port']").text($(this).find("[colName='eport']").val());
+                            $(this).find("[colName='eport']").remove();
+                            $(this).find("[colName='status']").text($(this).find("[colName='estatus']").val());
+                            $(this).find("[colName='estatus']").remove();
+                        });
+                        $(this).val("编辑");
+                    } else {
+                        $("#choose tr").each(function () {
+                            if ($(this).find("[colName='choose']").children().first().prop("checked")) {
+                                var tmp = $(this).find("[colName='ip']").text();
+                                $(this).find("[colName='ip']").text("").append("<input type='text' colName='eip' class='eInput' value='" + tmp + "' />");
+                                tmp = $(this).find("[colName='port']").text();
+                                $(this).find("[colName='port']").text("").append("<input type='text' colName='eport' class='eInput' value='" + tmp + "' />");
+                                tmp = $(this).find("[colName='status']").text();
+                                $(this).find("[colName='status']").text("").append("<select colName='estatus' class='eInput'><option value='在线' selected='selected'>在线</option><option value='下线'>下线</option></select>");
+                            }
+                        });
+                        $(this).val("查看");
+                    }
+                });
+                $("#choose [colName='choose'] input").click(function () {
+                    if ($("#edit").val() === "查看") {
+                        var tr = $(this).parent().parent();
+                        console.log(tr);
+                        if ($(this).prop()) {
+                            var tmp = tr.find("[colName='ip']").text();
+                            tr.find("[colName='ip']").text("").append("<input type='text' colName='eip' class='eInput' value='" + tmp + "' />");
+                            tmp = tr.find("[colName='port']").text();
+                            tr.find("[colName='port']").text("").append("<input type='text' colName='eport' class='eInput' value='" + tmp + "' />");
+                            tmp = tr.find("[colName='status']").text();
+                            tr.find("[colName='status']").text("").append("<select colName='estatus' class='eInput'><option value='在线' selected='selected'>在线</option><option value='下线'>下线</option></select>");
+                        } else {
+                            tr.find("[colName='ip']").text(tr.find("[colName='eip']").val());
+                            tr.find("[colName='eip']").remove();
+                            tr.find("[colName='port']").text(tr.find("[colName='eport']").val());
+                            tr.find("[colName='eport']").remove();
+                            tr.find("[colName='status']").text(tr.find("[colName='estatus']").val());
+                            tr.find("[colName='estatus']").remove();
+                        }
+                    }
                 });
             </script>
         </div>
@@ -258,6 +321,75 @@
                 })
             </script>
         </div>
+        <h2>输入验证</h2>
+        <div style="border: #888888 1px solid; width: 640px;" >
+            <form action="exerSets.html" method="post">
+                <style>
+                    .iLabel{
+                        display: inline-block;
+                        width: 120px;
+                        height: 30px;
+                        text-align: right;
+                        line-height: 30px;
+                        margin: 10px 0;
+                        float: left;
+                    }
+                    .iInput{
+                        display: inline-block;
+                        width: 160px;
+                        height: 30px;
+                        text-align: left;
+                        line-height: 30px;
+                        margin: 10px 0;
+                        float: left;
+                    }
+                    .iButton{
+                        display: inline-block;
+                        width: 100px;
+                        height: 30px;
+                        line-height: 30px;
+                        margin: 10px 0 10px 10px;
+                        padding: 0;
+                    }
+                    .iPrompt{
+                        display: inline-block;
+                        height: 30px;
+                        line-height: 30px;
+                        margin: 10px;
+                        color: red;
+                        float: left;
+                    }
+                </style>
+                <div style="overflow: hidden">
+                    <label class="iLabel">姓名：</label><input class="iInput" type="text" prom="请输入3-20个字符"/>
+                </div>
+                <div style="overflow: hidden">
+                    <label class="iLabel">手机号：</label><input class="iInput" type="text" prom="手机号必输"/>
+                </div>
+                <div style="overflow: hidden">
+                    <label class="iLabel">邮箱：</label><input class="iInput" type="text" prom="邮箱必输"/>
+                </div>
+                <div style="overflow: hidden">
+                    <input id="iSubmit" class="iButton" type="submit" value="提交" style="margin-left: 120px" />
+                    <input id="iCancel" class="iButton" type="submit" value="取消" />
+                </div>
+            </form>
+            <script>
+                $("#iSubmit").click(function () {
+                    var rtn = true;
+                    $(".iPrompt").remove();
+                    $(".iInput").each(function () {
+                        if ($(this).val().length <=0){
+                            $(this).after("<span class='iPrompt'>" + $(this).attr("prom") + "</span>");
+                            rtn = false;
+                            return false;
+                        }
+                    })
+                    return rtn;
+                });
+            </script>
+        </div>
+        <hr style="border: darkblue 2px double; width: 980px; ">
         <div style="height: 100px;"></div>
     </div>
 </body>
