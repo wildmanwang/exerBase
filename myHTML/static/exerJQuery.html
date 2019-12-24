@@ -142,9 +142,6 @@
                     $(".shade,.model").addClass("hide");
                     $(".model input[type='text']").val("");
                 });
-                $("#test").click(function () {
-                    console.log("test");
-                });
                 $("#edit").click(function () {
                     if ($(this).val() === "查看") {
                         $("#choose tr").each(function () {
@@ -173,8 +170,7 @@
                 $("#choose [colName='choose'] input").click(function () {
                     if ($("#edit").val() === "查看") {
                         var tr = $(this).parent().parent();
-                        console.log(tr);
-                        if ($(this).prop()) {
+                        if ($(this).prop("checked")) {
                             var tmp = tr.find("[colName='ip']").text();
                             tr.find("[colName='ip']").text("").append("<input type='text' colName='eip' class='eInput' value='" + tmp + "' />");
                             tmp = tr.find("[colName='port']").text();
