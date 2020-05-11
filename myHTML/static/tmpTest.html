@@ -1,35 +1,180 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>测试</title>
-    <style>
-        #d1:hover #d2{
-            background-color: #DD6666;
-        }
-        #d3:hover .s2 {
-            background-color: #DD6666;
-        }
-        .hide{
-            display: none;
-        }
-    </style>
+	<title>滚动条</title>
 </head>
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<style>
+	body {
+		background: #000;
+	}
+	.scroll-box {
+		width: 400px;
+		height: 584px;
+		background: #FFF;
+		padding-right: 25px;
+		margin: 0 auto;
+		position: relative;
+		overflow-y: scroll;
+		-webkit-touch-callout: none;
+		/*系统默认菜单被禁用*/
+		-webkit-user-select: none;
+		/*webkit浏览器*/
+		-khtml-user-select: none;
+		/*早期浏览器*/
+		-moz-user-select: none;
+		/*火狐*/
+		-ms-user-select: none;
+		/*IE10*/
+	}
+	.scroll-box::-webkit-scrollbar {
+	  display: none; /* Chrome Safari */
+	}
+
+	p {
+		text-align: center;
+		line-height: 80px;
+		border-bottom: 1px solid #ccc;
+	}
+
+	.scroll-bar {
+		width: 25px;
+		height: 100%;
+		position: absolute;
+		right: 0px;
+		top: 0%;
+	}
+
+	.bar-btn {
+		width: 25px;
+		height: 25px;
+		padding: 0;
+		border-radius: 50%;
+		position: absolute;
+		top: 0;
+		left: 0;
+		background: linear-gradient(0, #20A5EF 0, #C2FFFF 100%);
+		z-index: 2;
+	}
+	.bar {
+		width: 4px;
+		height: 100%;
+		margin: 0 auto;
+		background: #DCDCDC;
+		border-radius: 2px;
+	}
+
+</style>
 <body>
-    <div id="d1" style="width: 300px; height: 300px; border: blue 1px solid; background-color: #BBBBBB">
-        <div id="d2" class="s1" style="width: 100px; height: 100px; border: blue 1px solid;">方块1</div>
-    </div>
-    <div id="d3" style="width: 300px; height: 300px; border: blue 1px solid; background-color: #BBBBBB">
-        <div id="d4" class="s2" style="width: 100px; height: 100px; border: blue 1px solid">方块2</div>
-    </div>
-    <div id="dSize" style="display: inline-block; width: 200px; height: 100px; border: #BBBBBB 10px solid; margin: 10px; padding: 10px; background-color: #DD6666; float: left"></div>
-    <div id="dSize2" style="display: inline-block; width: 200px; height: 100px; margin-top: 20px; background-color: #DD6666; float: left"></div>
-    <script src="js/jquery-3.4.1.js"></script>
-    <script>
-        console.log("height:" + $("#dSize").height());
-        console.log("innerHeight:" + $("#dSize").innerHeight());
-        console.log("outerHeight:" + $("#dSize").outerHeight());
-        console.log("outerHeight(true):" + $("#dSize").outerHeight(true));
-    </script>
+	<div class="scroll-box" onscroll="onScroll()">
+		<p>1</p>
+		<p>2</p>
+		<p>3</p>
+		<p>4</p>
+		<p>5</p>
+		<p>6</p>
+		<p>7</p>
+		<p>8</p>
+		<p>9</p>
+		<p>10</p>
+		<p>11</p>
+		<p>12</p>
+		<p>13</p>
+		<p>14</p>
+		<p>15</p>
+		<p>16</p>
+		<p>17</p>
+		<div id="scrollBar" class="scroll-bar">
+	        <div id="scrollBall" class="bar-btn button-3d" onmousedown="start(this)"  onmousemove="move(this)"></div>
+	        <div class="bar"></div>
+	    </div>
+	</div>
 </body>
+<script type="text/javascript">
+	var flags = false
+	var show = false
+	var disX = 0
+	var disY = 0
+	$(document).ready(function(){
+		showBar()
+	});
+	function showBar(){
+		// 判断盒子是否要显示滚动条
+        var box = $('.scroll-box')[0]
+        var cHeight = box.clientHeight;
+        var sHeight = box.scrollHeight;
+        if (cHeight < sHeight) { //超过
+            $('#scrollBar').css('display', 'block')
+        } else {
+            $('#scrollBar').css('display', 'none')
+        }
+    }
+    function start(odiv){
+        var touch
+        if (event.touches) {
+            touch = event.touches[0];
+        } else {
+            touch = event;
+        }
+        //记录初始位置
+        disX = touch.clientX - odiv.offsetLeft;
+        disY = touch.clientY - odiv.offsetTop;
+        flags= true
+    }
+    function move(odiv){
+        if(flags){       //获取目标元素
+            var scrollBox = $('.scroll-box')[0];  //获取滚动盒子
+
+            var scrollHeight = scrollBox.scrollHeight; //滚动盒子滚动条高度
+            var clientHeight = scrollBox.clientHeight; //滚动盒子本身高度
+            var scrollMaxHeight = scrollHeight-clientHeight; //可滚动的最大高度
+            // console.log(e)
+            var touch
+            if (event.touches) {
+                touch = event.touches[0];
+            } else {
+                touch = event;
+            }
+            var pHeight = odiv.parentElement.offsetHeight;//滚动条的总高度
+            var oHeight = odiv.offsetHeight;//滚动条的滑块高度
+            //算出元素相对的位置
+            var left = touch.clientX - disX;
+            var top = touch.clientY - disY;
+            // console.log(odiv)
+            //移动
+            if(top<0){
+                odiv.style.top = 0 + 'px';
+            } else if (top>pHeight-oHeight){
+                odiv.style.top = pHeight-oHeight + 'px';
+            }else {
+                odiv.style.top = top + 'px';
+            }
+            var scrollTop = scrollMaxHeight*top/(pHeight-oHeight)
+            scrollBox.scrollTop =  scrollTop;
+        }
+    }
+    function end() {
+        flags= false
+    }
+    // 鼠标滚轮滚动  滚动条跟着滚动
+    function onScroll() {
+		var scrollBox = $('.scroll-box')[0];  //获取滚动盒子
+		var scrollHeight = scrollBox.scrollHeight; //滚动条
+		var clientHeight = scrollBox.clientHeight; //可视区
+		var scrollTop = scrollBox.scrollTop; //距离顶部
+		var scrollMaxHeight = scrollHeight - clientHeight; //可滚动的最大高度
+
+		var scrollBall = document.getElementById('scrollBall'); //滚动条滑块元素
+		var scrollBar = document.getElementById('scrollBar'); //滚动条滑块元素
+		var pHeight = scrollBar.offsetHeight;//滚动条的总高度
+		var oHeight = scrollBall.offsetHeight;//滚动条的滑块高度
+		var top = scrollTop/scrollMaxHeight*(pHeight-oHeight)
+		scrollBar.style.top = scrollTop+'px';
+		scrollBall.style.top = top+'px';
+    }
+    // 监听鼠标抬起 离开动作
+    window.addEventListener('mouseup',end)//鼠标抬起停止滚动
+    window.addEventListener('mouseleave',end) //离开浏览器窗口停止滚动
+    $('.scroll-box')[0].addEventListener('mouseleave',end) //离开盒子停止滚动
+</script>
 </html>

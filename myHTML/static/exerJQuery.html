@@ -234,37 +234,49 @@
             <style>
                 #hmenu{
                     width: 640px;
-                    height: 40px;
-                    border: #888888 1px solid;
-                    border-bottom: none;
+                    height: 33px;
+                    border-bottom: #888888 1px solid;
+                    overflow: visible;
+                }
+                .menuSpace{
+                    display: inline-block;
+                    height: 32px;
+                    width: 5px;
                 }
                 .menuItem{
                     display: inline-block;
-                    height: 40px;
-                    line-height: 40px;
+                    height: 32px;
+                    width: 60px;
+                    line-height: 32px;
+                    text-align: center;
+                    font-size: 14px;
                     color: #555555;
                     background-color: #DDDDDD;
-                    padding: 0 20px;
-                    border-right: #BBBBBB 1px solid;
-                    border-bottom: #BBBBBB 1px solid;
+                    border: #BBBBBB 1px solid;
                 }
                 .menuActive{
                     color: goldenrod;
                     background-color: white;
+                    border-bottom: white 1px solid;
                 }
                 #hcontent{
                     width: 640px;
                     min-height: 100px;
                     border: #888888 1px solid;
+                    border-top: none;
                 }
                 .subContent{
-                    margin: 10px 10px;
+                    background-color: white;
                 }
             </style>
             <div id="hmenu">
+                <div class="menuSpace left"></div>
                 <div class="menuItem left menuActive" data-target="A">菜单A</div>
+                <div class="menuSpace left"></div>
                 <div class="menuItem left" data-target="B">菜单B</div>
+                <div class="menuSpace left"></div>
                 <div class="menuItem left" data-target="C">菜单C</div>
+                <div class="menuSpace left"></div>
                 <div class="menuItem left" data-target="D">菜单D</div>
             </div>
             <div id="hcontent">
